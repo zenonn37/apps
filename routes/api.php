@@ -16,3 +16,14 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('/register', 'AuthenicateController@register');
+
+
+
+Route::get('/programs', 'ProgramController@index');
+Route::get('/programs/{program}', 'ProgramController@show');
+Route::post('/programs', 'ProgramController@store');
+Route::patch('/programs/{program}', 'ProgramController@update');
+Route::delete('/programs/{program}', 'ProgramController@delete');

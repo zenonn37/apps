@@ -14,6 +14,15 @@ class ExcerciseResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'name' => $this->name,
+            'level' => $this->level,
+            'sets' => $this->sets,
+            'reps' => $this->reps,
+            'instructions' => $this->instructions,
+            'failure' => $this->failure,
+            'completed' => $this->completed,
+            'id' => $this->id
+        ];
     }
 }

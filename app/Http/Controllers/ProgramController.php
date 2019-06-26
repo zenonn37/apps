@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Program;
+use App\Http\Resources\ProgramResource;
+use App\Http\Requests\ProgramRequest;
 
-class Program extends Controller
+class ProgramController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,18 +16,12 @@ class Program extends Controller
      */
     public function index()
     {
-        //
+        $programs = Program::all();
+
+        return ProgramResource::collection($programs);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -32,9 +29,22 @@ class Program extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProgramRequest $request)
     {
-        //
+        $program = new Program;
+
+        $program->name = $request->name;
+        $program->level = $request->level;
+        $program->time = $request->time;
+        $program->calories = $request->calories;
+        $program->description = $request->description;
+        $program->last_workout = $request->last_workout;
+        $program->user_id = $request->user_id;
+
+        $program->save();
+
+
+        return new ProgramResource($program);
     }
 
     /**
@@ -48,16 +58,7 @@ class Program extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
