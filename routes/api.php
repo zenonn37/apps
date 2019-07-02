@@ -19,11 +19,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('/register', 'AuthenicateController@register');
+Route::post('/login', 'AuthenicateController@login');
+
+
+Route::post('/logout', 'AuthenicateController@logout')->middleware('auth:api');
 
 
 
-Route::get('/programs', 'ProgramController@index');
-Route::get('/programs/{program}', 'ProgramController@show');
-Route::post('/programs', 'ProgramController@store');
-Route::patch('/programs/{program}', 'ProgramController@update');
-Route::delete('/programs/{program}', 'ProgramController@delete');
+Route::get('/programs', 'ProgramController@index')->middleware('auth:api');;
+Route::get('/programs/{program}', 'ProgramController@show')->middleware('auth:api');;
+Route::post('/programs', 'ProgramController@store')->middleware('auth:api');;
+Route::patch('/programs/{program}', 'ProgramController@update')->middleware('auth:api');;
+Route::delete('/programs/{program}', 'ProgramController@destroy')->middleware('auth:api');;

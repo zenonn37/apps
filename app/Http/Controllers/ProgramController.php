@@ -16,7 +16,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $programs = Program::all();
+        $programs = Program::where('user_id', auth()->user()->id)->get();
 
         return ProgramResource::collection($programs);
     }
@@ -33,13 +33,14 @@ class ProgramController extends Controller
     {
         $program = new Program;
 
+        $program->user_id = auth()->user()->id;
         $program->name = $request->name;
         $program->level = $request->level;
         $program->time = $request->time;
         $program->calories = $request->calories;
         $program->description = $request->description;
-        $program->last_workout = $request->last_workout;
-        $program->user_id = $request->user_id;
+
+
 
         $program->save();
 
@@ -53,9 +54,9 @@ class ProgramController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Program $program)
     {
-        //
+        return new ProgramResource($program);
     }
 
 
@@ -67,9 +68,17 @@ class ProgramController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Program $program, ProgramRequest $request)
     {
-        //
+        $program->name = $request->get('name', $program->name);
+        $program->description = $request->get('description', $program->description);
+        $program->level = $request->get('level', $program->level);
+        $program->time = $request->get('time', $program->time);
+        $program->calories = $request->get('calories', $program->calories);
+
+        $program->save();
+
+        return new ProgramResource($program);
     }
 
     /**
@@ -78,8 +87,13 @@ class ProgramController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Program $program)
     {
-        //
+
+        $program->delete();
+
+        $programs = Program::all();
+
+        return ProgramResource::collection($programs);
     }
 }

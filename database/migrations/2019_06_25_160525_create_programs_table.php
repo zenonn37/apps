@@ -22,7 +22,6 @@ class CreateProgramsTable extends Migration
             $table->string('time', 255);
             $table->string('calories', 255);
             $table->text('description');
-            $table->dateTime('last_workout');
             $table->integer('used')->default(0);
             $table->boolean('first_run')->default(0);
             $table->timestamps();

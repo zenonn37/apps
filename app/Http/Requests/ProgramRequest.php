@@ -29,7 +29,7 @@ class ProgramRequest extends FormRequest
             "time" => "required|string|max:30",
             "calories" => "required|string",
             "description" => "required|string|max:1000",
-            "last_workout" => "required"
+
 
         ];
     }
