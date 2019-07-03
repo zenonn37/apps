@@ -12,10 +12,10 @@ class ExcerciseController extends Controller
 
 
 
-    public function index($id)
+    public function index()
     {
         //get the excercise model
-        $excercise = Excercise::where('program_id', $id)->get();
+        $excercise = Excercise::where('user_id', auth()->user()->id)->get();
 
         return ExcerciseResource::collection($excercise);
     }
@@ -32,6 +32,9 @@ class ExcerciseController extends Controller
     {
 
         $excercise = new Excercise;
+
+        $excercise->user_id = auth()->user()->id;
+
         $excercise->name = $request->name;
         $excercise->sets = $request->sets;
         $excercise->reps = $request->reps;

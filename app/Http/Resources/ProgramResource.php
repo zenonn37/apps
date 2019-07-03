@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ExcerciseResource;
 
 class ProgramResource extends JsonResource
 {
@@ -20,10 +21,10 @@ class ProgramResource extends JsonResource
             'time' => $this->time,
             'calories' => $this->calories,
             'description' => $this->description,
-
             'used' => $this->used,
             'first_run' => $this->first_run,
-            'id' => $this->id
+            'id' => $this->id,
+            'excercises' => ExcerciseResource::collection($this->excercises)
 
 
         ];

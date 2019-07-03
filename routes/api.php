@@ -33,8 +33,8 @@ Route::patch('/programs/{program}', 'ProgramController@update')->middleware('aut
 Route::delete('/programs/{program}', 'ProgramController@destroy')->middleware('auth:api');
 
 
-Route::get('/excercises/{id}', 'ExcerciseController@index');
-Route::get('/excercises/{excercise}', 'ExcerciseController@show');
-Route::post('/excercises', 'ExcerciseController@store');
-Route::patch('/excercises/{excercise}', 'ExcerciseController@update');
-Route::delete('/excercises/{excercise}', 'ExcerciseController@destroy');
+Route::get('/excercises', 'ExcerciseController@index')->middleware('auth:api');
+Route::get('/excercises/{excercise}', 'ExcerciseController@show')->middleware('auth:api');
+Route::post('/excercises', 'ExcerciseController@store')->middleware('auth:api');
+Route::patch('/excercises/{excercise}', 'ExcerciseController@update')->middleware('auth:api');
+Route::delete('/excercises/{excercise}', 'ExcerciseController@destroy')->middleware('auth:api');

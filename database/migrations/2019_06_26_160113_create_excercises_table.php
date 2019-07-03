@@ -16,14 +16,16 @@ class CreateExcercisesTable extends Migration
         Schema::create('excercises', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('program_id');
+            $table->unsignedInteger('user_id');
             $table->foreign('program_id')->references('id')->on('programs')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
             $table->integer('sets');
             $table->integer('reps');
             $table->string('level');
             $table->text('instructions');
             $table->boolean('failure')->default(0);
-            $table->boolean('completed')->default(0);
+
 
 
 
