@@ -22,7 +22,8 @@ class ExcerciseResource extends JsonResource
             'instructions' => $this->instructions,
             'failure' => $this->failure,
             'completed' => $this->completed,
-            'id' => $this->id
+            'id' => $this->id,
+            'program_id' => $this->program_id
         ];
     }
 }

@@ -13,7 +13,7 @@ class ExcerciseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,15 @@ class ExcerciseRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|max:30|min:2',
+            'sets' => 'required|integer',
+            'reps' => 'required|integer',
+            'level' => 'required|string',
+            'instructions' => 'required|string|min:10|max:2000',
+            'failure' => 'required|boolean',
+            'program_id' => 'required|integer'
+
+
         ];
     }
 }

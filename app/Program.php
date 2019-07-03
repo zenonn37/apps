@@ -12,4 +12,8 @@ class Program extends Model
     {
         return  $this->belongsTo(User::class);
     }
+    public function excercises()
+    {
+        return $this->hasMany(Excercise::class);
+    }
 }

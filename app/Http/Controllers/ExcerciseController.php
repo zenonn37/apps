@@ -3,28 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\ExcerciseResource;
+use App\Http\Requests\ExcerciseRequest;
+use App\Excercise;
 
-class Excercise extends Controller
+class ExcerciseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+
+
+    public function index($id)
     {
-        //
+        //get the excercise model
+        $excercise = Excercise::where('program_id', $id)->get();
+
+        return ExcerciseResource::collection($excercise);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -32,9 +28,21 @@ class Excercise extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ExcerciseRequest $request)
     {
-        //
+
+        $excercise = new Excercise;
+        $excercise->name = $request->name;
+        $excercise->sets = $request->sets;
+        $excercise->reps = $request->reps;
+        $excercise->level = $request->level;
+        $excercise->instructions = $request->instructions;
+        $excercise->failure = $request->failure;
+        $excercise->program_id = $request->program_id;
+
+        $excercise->save();
+
+        return new ExcerciseResource($excercise);
     }
 
     /**
@@ -43,42 +51,34 @@ class Excercise extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Excercise $excercise)
+
     {
-        //
+        return new ExcerciseResource($excercise);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function update(Excercise $excercise, ExcerciseRequest $request)
     {
-        //
+        $excercise->name = $request->get('name', $excercise->name);
+        $excercise->sets = $request->get('sets', $excercise->sets);
+        $excercise->reps = $request->get('reps', $excercise->reps);
+        $excercise->level = $request->get('level', $excercise->level);
+        $excercise->instructions = $request->get('instructions', $excercise->instructions);
+        $excercise->failure = $request->get('failure', $excercise->failure);
+
+        $excercise->save();
+
+        return new ExcerciseResource($excercise);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+
+
+    public function destroy(Excercise $excercise)
     {
-        //
+        $excercise->delete();
+
+        return  response()->json('Deleted', 200);
     }
 }
