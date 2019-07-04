@@ -38,3 +38,8 @@ Route::get('/excercises/{excercise}', 'ExcerciseController@show')->middleware('a
 Route::post('/excercises', 'ExcerciseController@store')->middleware('auth:api');
 Route::patch('/excercises/{excercise}', 'ExcerciseController@update')->middleware('auth:api');
 Route::delete('/excercises/{excercise}', 'ExcerciseController@destroy')->middleware('auth:api');
+
+
+//Recipe API only
+Route::get('/test', 'ApiRecipeController@index');
+Route::get('/food/{food}', 'ApiRecipeController@recipe');
