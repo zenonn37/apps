@@ -49,3 +49,14 @@ Route::post('/projects', 'ProjectController@store');
 Route::get('/projects/{project}', 'ProjectController@show');
 Route::patch('/projects', 'ProjectController@update');
 Route::delete('/projects', 'ProjectController@destroy');
+
+Route::get('/category', 'CategoryController@index');
+Route::post('/category', 'CategoryController@store');
+Route::patch('/category/{category}', 'CategoryController@update');
+Route::delete('/category/{category}', 'CategoryController@destroy');
+
+Route::get('/tasks', 'TaskController@index');
+Route::get('/tasks/{task}', 'TaskController@search');
+Route::post('/tasks', 'TaskController@store');
+Route::patch('/tasks', 'TaskController@update');
+Route::delete('/tasks', 'TaskController@destroy');

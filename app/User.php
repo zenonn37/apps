@@ -16,6 +16,27 @@ class User extends Authenticatable
         return $this->hasMany(Program::class);
     }
 
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+    public function recipes()
+    {
+        return $this->hasMany(Recipe::class);
+    }
+    public function excercises()
+    {
+        return $this->hasMany(Excercise::class);
+    }
+
 
     /**
      * The attributes that are mass assignable.
