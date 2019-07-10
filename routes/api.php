@@ -17,11 +17,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+//auth
 Route::post('/register', 'AuthenicateController@register');
 Route::post('/login', 'AuthenicateController@login');
-
-
 Route::post('/logout', 'AuthenicateController@logout')->middleware('auth:api');
 
 
@@ -32,7 +30,7 @@ Route::post('/programs', 'ProgramController@store')->middleware('auth:api');
 Route::patch('/programs/{program}', 'ProgramController@update')->middleware('auth:api');
 Route::delete('/programs/{program}', 'ProgramController@destroy')->middleware('auth:api');
 
-
+//excercise
 Route::get('/excercises', 'ExcerciseController@index')->middleware('auth:api');
 Route::get('/excercises/{excercise}', 'ExcerciseController@show')->middleware('auth:api');
 Route::post('/excercises', 'ExcerciseController@store')->middleware('auth:api');
@@ -43,3 +41,11 @@ Route::delete('/excercises/{excercise}', 'ExcerciseController@destroy')->middlew
 //Recipe API only
 Route::get('/test', 'ApiRecipeController@index');
 Route::get('/food/{food}', 'ApiRecipeController@recipe');
+
+
+//Task API
+Route::get('/projects', 'ProjectController@index');
+Route::post('/projects', 'ProjectController@store');
+Route::get('/projects/{project}', 'ProjectController@show');
+Route::patch('/projects', 'ProjectController@update');
+Route::delete('/projects', 'ProjectController@destroy');
