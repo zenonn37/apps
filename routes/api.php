@@ -37,6 +37,13 @@ Route::post('/excercises', 'ExcerciseController@store')->middleware('auth:api');
 Route::patch('/excercises/{excercise}', 'ExcerciseController@update')->middleware('auth:api');
 Route::delete('/excercises/{excercise}', 'ExcerciseController@destroy')->middleware('auth:api');
 
+Route::get('/activity', 'ActivityController@index');
+Route::get('/activity/{activity}', 'ActivityController@show');
+Route::post('/activity', 'ActivityController@store');
+Route::patch('/activity/{activity}', 'ActivityController@update');
+Route::delete('/activity/{activity}', 'ActivityController@destroy');
+
+
 
 //Recipe API only
 Route::get('/test', 'ApiRecipeController@index');
