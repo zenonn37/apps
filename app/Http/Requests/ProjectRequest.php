@@ -27,7 +27,8 @@ class ProjectRequest extends FormRequest
             'name' => 'required|max:30|min:3|string',
             'color' => 'required|string',
             'shared' => '',
-            'favorite' => ''
+            'favorite' => '',
+            'comments' => ''
         ];
     }
 }

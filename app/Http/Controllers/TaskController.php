@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Task;
+use App\Http\Resources\TaskResource;
+use App\Http\Requests\TaskRequest;
 
 class TaskController extends Controller
 {
@@ -14,18 +16,15 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return Task::all();
+       $task = Task::where('user_id', auth()->user()->id)->get();
+       return TaskResource::collection($task);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function search($task){
+
     }
+
+    
 
     /**
      * Store a newly created resource in storage.
@@ -33,32 +32,34 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
-        //
+        $task = new Task();
+
+        $task->user_id = auth()->user()->id;
+        $task->title = $request->title;
+        $task->notes = $request->notes;
+        $task->priority = $request->priority;
+        $task->due_date = $request->due_date;
+        $task->project_id = $request->project_id;
+
+        $task->save();
+
+
+
+        return new TaskResource($task);
+
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function complete(Task $task){
+
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+    
+
+   
 
     /**
      * Update the specified resource in storage.
@@ -67,9 +68,16 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Task $task, TaskRequest $request)
     {
-        //
+        $task->title = $request->get('title',$request->title);
+        $task->notes = $request->get('notes',$request->notes);
+        $task->priority = $request->get('priority ',$request->priority);
+        $task->due_date = $request->get('due_date ',$request->due_date );
+
+        $task->save();
+
+        return new TaskResource($task);
     }
 
     /**
@@ -78,8 +86,10 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return response()->json('Destroyed',200);
     }
 }

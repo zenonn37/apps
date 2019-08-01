@@ -18,6 +18,7 @@ class CreateProjectsTable extends Migration
             $table->unsignedInteger('user_id')->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
+            $table->text('comments')->nullable();
             $table->boolean('shared')->default(0);
             $table->string('color');
             $table->boolean('favorite')->default(0);

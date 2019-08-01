@@ -51,19 +51,16 @@ Route::get('/food/{food}', 'ApiRecipeController@recipe');
 
 
 //Task API
-Route::get('/projects', 'ProjectController@index');
-Route::post('/projects', 'ProjectController@store');
-Route::get('/projects/{project}', 'ProjectController@show');
-Route::patch('/projects', 'ProjectController@update');
-Route::delete('/projects', 'ProjectController@destroy');
+Route::get('/projects', 'ProjectController@index')->middleware('auth:api');
+Route::post('/projects', 'ProjectController@store')->middleware('auth:api');
+Route::get('/projects/{project}', 'ProjectController@show')->middleware('auth:api');
+Route::patch('/projects', 'ProjectController@update')->middleware('auth:api');
+Route::delete('/projects', 'ProjectController@destroy')->middleware('auth:api');
 
-Route::get('/category', 'CategoryController@index');
-Route::post('/category', 'CategoryController@store');
-Route::patch('/category/{category}', 'CategoryController@update');
-Route::delete('/category/{category}', 'CategoryController@destroy');
 
-Route::get('/tasks', 'TaskController@index');
-Route::get('/tasks/{task}', 'TaskController@search');
-Route::post('/tasks', 'TaskController@store');
-Route::patch('/tasks', 'TaskController@update');
-Route::delete('/tasks', 'TaskController@destroy');
+
+Route::get('/tasks', 'TaskController@index')->middleware('auth:api');
+Route::get('/tasks/{task}', 'TaskController@search')->middleware('auth:api');
+Route::post('/tasks', 'TaskController@store')->middleware('auth:api');
+Route::patch('/tasks', 'TaskController@update')->middleware('auth:api');
+Route::delete('/tasks', 'TaskController@destroy')->middleware('auth:api');
