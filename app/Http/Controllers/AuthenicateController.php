@@ -12,6 +12,7 @@ use App\Http\Requests\UserRequest;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResource;
+use App\Project;
 
 class AuthenicateController extends Controller
 {
@@ -41,6 +42,15 @@ class AuthenicateController extends Controller
         $user->password = Hash::make($request->password);
 
         $user->save();
+
+        $project = new Project;
+
+        $project->user_id = $user->id;
+        $project->name = "Inbox";
+        $project->comments = "This is your starter project, to organize your task. Click on the New Project tab to make your own!";
+        $project->color = "#efefef";
+        $project->save();
+
 
         return new UserResource($user);
     }

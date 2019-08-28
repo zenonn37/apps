@@ -20,7 +20,8 @@ class TaskResource extends JsonResource
             'notes' => $this->notes,
             'priority' => $this->priority,
             'complete' => $this->complete,
-            'due_date' => $this->due_date
+            'due_date' => $this->due_date,
+            'ui-date' => $this->ui_date
         ];
     }
 }

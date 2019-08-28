@@ -24,10 +24,12 @@ class TaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|max:30|min:3|string',
+            'title' => 'required|max:40|min:3|string',
             'notes' => 'string|max:1000',
             'priority' => 'required|string',
-            'due_date' => 'required'
+            'due_date' => 'required',
+            'ui_date' => 'required'
+
         ];
     }
 }

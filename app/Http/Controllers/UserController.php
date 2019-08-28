@@ -3,28 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\ProjectRequest;
-use App\Project;
-use App\Http\Resources\ProjectResource;
+use App\Http\Resources\UserResource;
+use App\User;
 
-class ProjectController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::where('user_id', auth()->user()->id)
-            ->where('name', 'inbox')
-            ->first();
+        $user = $request->user();
 
-        return  new ProjectResource($projects);
+        return new UserResource($user);
     }
 
-
-
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -32,24 +36,9 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProjectRequest $request)
-
-
+    public function store(Request $request)
     {
-        //needs refactor duplicate code from Request Class!
-        $project = new Project();
-
-        $project->user_id = auth()->user()->id;
-
-        $project->name = $request->name;
-        $project->comments = $request->comments;
-        $project->color = $request->color;
-
-        $project->save();
-
-
-
-        return new ProjectResource($project);
+        //
     }
 
     /**
@@ -58,12 +47,21 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show($id)
     {
-        return new ProjectResource($project);
+        //
     }
 
-
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
     /**
      * Update the specified resource in storage.

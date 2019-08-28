@@ -16,15 +16,14 @@ class TaskController extends Controller
      */
     public function index()
     {
-       $task = Task::where('user_id', auth()->user()->id)->get();
-       return TaskResource::collection($task);
+        $task = Task::where('user_id', auth()->user()->id)->get();
+        return TaskResource::collection($task);
     }
 
-    public function search($task){
+    public function search($task)
+    { }
 
-    }
 
-    
 
     /**
      * Store a newly created resource in storage.
@@ -36,11 +35,15 @@ class TaskController extends Controller
     {
         $task = new Task();
 
+        // //date($request->ui_date);
+        // $date =  date("Y-m-d H:i:s");
+
         $task->user_id = auth()->user()->id;
         $task->title = $request->title;
         $task->notes = $request->notes;
         $task->priority = $request->priority;
         $task->due_date = $request->due_date;
+        $task->ui_date = $request->ui_date;
         $task->project_id = $request->project_id;
 
         $task->save();
@@ -48,18 +51,14 @@ class TaskController extends Controller
 
 
         return new TaskResource($task);
-
-
     }
 
-    public function complete(Task $task){
+    public function complete(Task $task)
+    { }
 
 
-    }
 
-    
 
-   
 
     /**
      * Update the specified resource in storage.
@@ -70,10 +69,10 @@ class TaskController extends Controller
      */
     public function update(Task $task, TaskRequest $request)
     {
-        $task->title = $request->get('title',$request->title);
-        $task->notes = $request->get('notes',$request->notes);
-        $task->priority = $request->get('priority ',$request->priority);
-        $task->due_date = $request->get('due_date ',$request->due_date );
+        $task->title = $request->get('title', $request->title);
+        $task->notes = $request->get('notes', $request->notes);
+        $task->priority = $request->get('priority ', $request->priority);
+        $task->due_date = $request->get('due_date ', $request->due_date);
 
         $task->save();
 
@@ -90,6 +89,6 @@ class TaskController extends Controller
     {
         $task->delete();
 
-        return response()->json('Destroyed',200);
+        return response()->json('Destroyed', 200);
     }
 }
