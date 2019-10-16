@@ -69,7 +69,7 @@ class ExcerciseController extends Controller
         $excercise->instructions = $request->get('instructions', $excercise->instructions);
         $excercise->failure = $request->get('failure', $excercise->failure);
 
-        $excercise->save();
+        $excercise->update();
 
         return new ExcerciseResource($excercise);
     }

@@ -31,6 +31,20 @@ class AuthenicateController extends Controller
         $this->tokens = $tokens;
     }
 
+    public function new(UserRequest $request)
+    {
+
+        $user = new User;
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+
+        $user->save();
+
+        return new UserResource($user);
+    }
+
 
     public function register(UserRequest $request)
     {
