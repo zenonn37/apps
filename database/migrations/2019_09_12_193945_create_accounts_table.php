@@ -20,6 +20,7 @@ class CreateAccountsTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->double('balance');
+            $table->dateTimeTz('date');
             $table->timestamps();
         });
     }

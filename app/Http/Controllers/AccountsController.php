@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Account;
 use App\Http\Requests\AccountRequest;
+use App\Http\Resources\AccountResource;
 use Illuminate\Http\Request;
 
 class AccountsController extends Controller
@@ -15,9 +16,9 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        $acct = Account::all();
+        $acct = Account::where('user_id', auth()->user()->id)->get();
 
-        return response($acct);
+        return AccountResource::collection($acct);
     }
 
 
@@ -34,11 +35,12 @@ class AccountsController extends Controller
         $account->name = $request->name;
         $account->type = $request->type;
         $account->balance = $request->balance;
+        $account->date = $request->date;
         $account->user_id  = auth()->user()->id;
 
         $account->save();
 
-        return response($account);
+        return  new AccountResource($account);
         //
     }
 
@@ -53,9 +55,19 @@ class AccountsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AccountRequest $request, $id)
     {
-        //
+        $acct = Account::find($id);
+
+
+        $acct->name = $request->name;
+        $acct->type = $request->type;
+        $acct->balance = $request->balance;
+        $acct->date = $request->date;
+
+        $acct->save();
+
+        return new AccountResource($acct);
     }
 
     /**
@@ -66,6 +78,8 @@ class AccountsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Account::destroy($id);
+
+        return response()->json('Deleted', 200);
     }
 }

@@ -50,6 +50,9 @@ return [
 
     'openweather' => [
         'appid' => env('OPEN_WEATHER_APPID')
-    ]
+    ],
+    'futbol' => [
+        'appid' => env('FUTBOL_ID')
+    ],
 
 ];

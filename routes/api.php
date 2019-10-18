@@ -101,3 +101,10 @@ Route::get('/expenese', 'ExpenseController@index')->middleware('auth:api');
 Route::post('/expenese', 'ExpenseController@store')->middleware('auth:api');
 Route::patch('/expenese/{expenese}', 'ExpenseController@update')->middleware('auth:api');
 Route::delete('/expenese/{expenese}', 'ExpenseController@destroy')->middleware('auth:api');
+
+
+//futbol api
+
+Route::post('/country', 'ApiFutBolController@country');
+Route::get('/teams_league/{id}', 'ApiFutBolController@teamLeague');
+Route::get('/teams_players/{id}', 'ApiFutBolController@teamsPlayers');
