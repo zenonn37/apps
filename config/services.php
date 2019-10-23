@@ -56,6 +56,9 @@ return [
     ],
     'googlegeo' => [
         'appid' => env('GEO_ID')
+    ],
+    'darksky' => [
+        'appid' => env('DARK_SKY')
     ]
 
 ];

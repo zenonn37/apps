@@ -11,6 +11,8 @@ class ApiWeatherController extends Controller
 
 
 
+
+
     public function dark(Request $request)
     {
 
@@ -18,7 +20,9 @@ class ApiWeatherController extends Controller
 
         $dark = new Client();
         $appid = config('services.googlegeo.appid');
-        $address = $request->address;
+        $city = $request->city;
+        $state = $request->state;
+        $address = $city . '' . $state;
 
         $url =  "https://maps.googleapis.com/maps/api/geocode/json?address={$address}&region=us,+CA&key={$appid}";
 
@@ -29,9 +33,31 @@ class ApiWeatherController extends Controller
         $status = $response->getStatusCode();
         $body = $response->getBody()->getContents();
 
+        $geo = json_decode($body);
+
+        $lat = $geo->results[0]->geometry->location;
 
 
-        return $body;
+        return $this->darkSky($lat);
+
+
+
+        //return response()->json($lat, 200);
+    }
+
+    public function darkSky($geo)
+    {
+
+        $lat = $geo->lat;
+        $lng = $geo->lng;
+        $dark = new Client();
+        $appid = config('services.darksky.appid');
+        $url = "https://api.darksky.net/forecast/{$appid}/{$lat},{$lng}";
+
+        $response = $dark->request('GET', $url);
+        $status = $response->getStatusCode();
+        $body = $response->getBody()->getContents();
+        return response($body);
     }
 
 

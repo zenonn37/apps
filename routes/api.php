@@ -81,6 +81,7 @@ Route::delete('/city/{city}', 'SaveCityController@destroy');
 Route::get('/dark', 'ApiWeatherController@dark');
 Route::get('/daily', 'ApiWeatherController@daily');
 Route::get('/forecast', 'ApiWeatherController@forecast');
+Route::get('/darksky', 'ApiWeatherController@darkSky');
 
 //budget api
 //accounts
