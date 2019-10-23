@@ -22,7 +22,11 @@ class ApiFutBolController extends Controller
             )
         );
 
-        return response()->json($response);
+        $test = $response->body;
+
+        //$array = array_unique($test);
+
+        return response()->json($test);
     }
 
     public function teamLeague($id)
@@ -38,7 +42,7 @@ class ApiFutBolController extends Controller
             )
         );
 
-        return response()->json($response);
+        return response()->json($response->body);
     }
     public function country(Request $request)
     {
@@ -56,6 +60,6 @@ class ApiFutBolController extends Controller
             )
         );
 
-        return response()->json($response);
+        return response()->json($response->body);
     }
 }

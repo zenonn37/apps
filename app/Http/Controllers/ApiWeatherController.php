@@ -17,10 +17,10 @@ class ApiWeatherController extends Controller
 
 
         $dark = new Client();
-        $key = "AIzaSyAFDr4RPEnQkyhfYRCr37xe3hk10SdrN1M";
+        $appid = config('services.googlegeo.appid');
         $address = $request->address;
 
-        $url =  "https://maps.googleapis.com/maps/api/geocode/json?address={$address}&region=us,+CA&key={$key}";
+        $url =  "https://maps.googleapis.com/maps/api/geocode/json?address={$address}&region=us,+CA&key={$appid}";
 
         //get city name, possibly state name or country,
         //use geocode api to translate city to lat & lng to city name for darksky api

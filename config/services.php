@@ -54,5 +54,10 @@ return [
     'futbol' => [
         'appid' => env('FUTBOL_ID')
     ],
+    'googlegeo' => [
+        'appid' => env('GEO_ID')
+    ]
 
 ];
+//obj
+//dark:{appid:env('DARK_SKY_ID')}
