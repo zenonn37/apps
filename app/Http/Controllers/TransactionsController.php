@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Http\Requests\TransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Transaction;
@@ -23,7 +24,7 @@ class TransactionsController extends Controller
         return response($trans);
     }
 
-    public function total($id)
+    public function total(Request $request, $id)
     {
         $trans = Transaction::where('acct_id', $id)->get();
 
@@ -31,13 +32,68 @@ class TransactionsController extends Controller
         $out = $trans->map(function ($trans) {
             return [
                 'type' => $trans->type,
-                'amount' => $trans->amount
+                'amount' => $trans->amount,
+
             ];
         });
 
+        $account = Account::find($id);
+
+        if (!empty($request->balance)) {
+            $account->balance = $request->balance;
+
+            $account->save();
+        }
 
 
-        return  response($out);
+
+
+
+        // $total = $trans->map(function ($tran) {
+
+        //     $array = [];
+        //     array_push($array, $tran->amount);
+        //     return $array;
+        //     //print_r($tran->amount . '<br>');
+        //     //print_r($sum . '<br>');
+
+
+        // });
+        // $credit = [];
+        // $debit = [];
+        // foreach ($trans as $key => $value) {
+        //     if ($value->type == "Deposit") {
+        //         array_push($credit, $value->amount);
+        //     }
+        //     if ($value->type != "Deposit") {
+        //         array_push($debit, $value->amount);
+        //     }
+        //     // array_push($bal, $value->amount);
+        // }
+        // // print_r($bal . '<br>');
+        // print(array_sum($credit) . '<br/>');
+        // print(array_sum($debit) . '<br/>');
+
+        // $loss = array_sum($credit);
+        // $gain = array_sum($debit);
+
+        // $net = $gain - $loss;
+
+        // $a = ($loss > $gain) ? -$net : $net;
+
+
+
+        // print($a);
+
+        //print_r(array_sum($total));
+
+        // print_r($total);
+
+
+
+
+
+        return  response()->json($out);
     }
 
 

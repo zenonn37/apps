@@ -78,10 +78,12 @@ Route::post('/city', 'SaveCityController@store');
 Route::patch('/city/{city}', 'SaveCityController@update');
 Route::delete('/city/{city}', 'SaveCityController@destroy');
 
-Route::get('/dark', 'ApiWeatherController@dark');
+Route::post('/city', 'ApiWeatherController@getCity');
+Route::post('/dark', 'ApiWeatherController@dark');
 Route::get('/daily', 'ApiWeatherController@daily');
 Route::get('/forecast', 'ApiWeatherController@forecast');
 Route::get('/darksky', 'ApiWeatherController@darkSky');
+Route::post('/geosky', 'ApiWeatherController@geoDarkSky');
 
 //budget api
 //accounts
@@ -91,7 +93,7 @@ Route::post('/accounts', 'AccountsController@store')->middleware('auth:api');
 Route::patch('/accounts/{accounts}', 'AccountsController@update')->middleware('auth:api');
 Route::delete('/accounts/{accounts}', 'AccountsController@destroy')->middleware('auth:api');
 //transactions
-Route::get('/total/{id}', 'TransactionsController@total');
+Route::post('/total/{id}', 'TransactionsController@total');
 Route::get('/transactions/{id}', 'TransactionsController@index')->middleware('auth:api');
 Route::get('/transactions/{transactions}', 'TransactionsController@show')->middleware('auth:api');
 Route::post('/transactions', 'TransactionsController@store')->middleware('auth:api');
