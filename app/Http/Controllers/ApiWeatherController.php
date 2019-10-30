@@ -60,10 +60,41 @@ class ApiWeatherController extends Controller
 
         $geo = json_decode($body);
 
-        $lat = $geo->results[0]->geometry->location;
+        if ($geo->status != 'ZERO_RESULTS') {
+
+            $weather =  $this->darkSky($geo->results[0]->geometry->location);
+
+            $final = json_decode($weather);
+
+            $data = [
+                'dark' => $final,
+                'address' => [
+                    'city' => $geo->results[0]->address_components[0]->long_name,
+                    'county' => $geo->results[0]->address_components[1]->long_name,
+                    'state' => $geo->results[0]->address_components[2]->short_name,
+                    'country' => $geo->results[0]->address_components[3]->short_name,
+
+                ]
+
+            ];
+            //$export = json_encode($data);
+            return response()->json($data, 200);
+        } else {
+            return response()->json($geo->status, 404);
+        }
 
 
-        return $this->darkSky($lat);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -82,7 +113,7 @@ class ApiWeatherController extends Controller
         $response = $dark->request('GET', $url);
         $status = $response->getStatusCode();
         $body = $response->getBody()->getContents();
-        return response($body);
+        return $body;
     }
     public function geoDarkSky(Request $request)
     {
