@@ -7,6 +7,7 @@ use App\Http\Requests\TransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Transaction;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TransactionsController extends Controller
 {
@@ -21,79 +22,153 @@ class TransactionsController extends Controller
 
         return TransactionResource::collection($trans);
 
-        return response($trans);
+        //return response($trans);
     }
 
-    public function total(Request $request, $id)
+    public function singleDay(Request $request, $id)
+    {
+        $trans = Transaction::where('date', $request->date)
+            ->where('acct_id', $id)->orderBy('date', 'desc')
+            ->paginate(12);
+        return TransactionResource::collection($trans);
+    }
+
+    public function dateRange(Request $request, $id)
+    {
+        $trans = Transaction::whereBetween('date', array($request->date, $request->date2))
+            ->where('acct_id', $id)->orderBy('date', 'desc')->paginate(30);
+        return TransactionResource::collection($trans);
+    }
+
+
+    public function transMonth()
+    {
+        $user = auth()->user()->id;
+
+        //get current date
+        $current = Carbon::today();
+        //subtract 30 days from current date
+        $lastThirty =  Carbon::today()->subDays(30);
+        //get data between today and thirty days ago
+        $trans = Transaction::whereBetween('date', array($lastThirty->toDateString(), $current->toDateString()))
+            ->where('user_id', $user)->orderBy('date', 'asc')
+            ->get();
+
+
+        //array for charts
+        $chart = array();
+
+        foreach ($trans as $data) {
+            //push data into array
+            array_push(
+                $chart,
+                [
+                    'amount' => $data->amount,
+                    'date' => $data->date
+                ]
+            );
+        }
+        //create php object
+        $data = [
+
+            'trans' => $chart,
+            'current' => $current->toDateString(),
+            'month' => $lastThirty->toDateString(),
+
+        ];
+        //return json for api 
+        return response()->json($data);
+    }
+
+    public function netWorth()
+    {
+
+        $user = auth()->user()->id;
+        $trans = Transaction::where('user_id', $user)->get();
+
+        $credit = array();
+        $debit = array();
+        $all = array();
+        $chart = array();
+
+
+        foreach ($trans as $key => $value) {
+            array_push($all, $value->amount);
+            array_push(
+                $chart,
+                [
+                    'amount' => $value->amount,
+                    'date' => $value->date
+                ]
+
+            );
+            if ($value->type != "Deposit") {
+                array_push($debit, $value->amount);
+            } else {
+                array_push($credit, $value->amount);
+            }
+        }
+
+        $dep = array_sum($credit);
+        $deb =  array_sum($debit);
+        $transaction =  count($all);
+
+        $net = $dep - $deb;
+        $data = [
+            'transactions' => $deb,
+            'deposits' => $dep,
+            'spent' => $net,
+            'count' => $transaction,
+            'all' => $all,
+            'charts' => $chart
+        ];
+
+        return response()->json($data);
+    }
+
+
+
+    public function total($id)
     {
         $trans = Transaction::where('acct_id', $id)->get();
 
 
-        $out = $trans->map(function ($trans) {
-            return [
-                'type' => $trans->type,
-                'amount' => $trans->amount,
 
-            ];
-        });
+        $credit = array();
+        $debit = array();
+
+        foreach ($trans as $key => $value) {
+
+            if ($value->type != "Deposit") {
+                array_push($debit, $value->amount);
+            } else {
+                array_push($credit, $value->amount);
+            }
+        }
+
+        $dep = array_sum($credit);
+        $deb =  array_sum($debit);
+
+        $net = $dep - $deb;
+        $data = [
+            'debit' => $deb,
+            'credit' => $dep,
+            'net' => $net
+        ];
+
 
         $account = Account::find($id);
 
-        if (!empty($request->balance)) {
-            $account->balance = $request->balance;
 
-            $account->save();
-        }
+        $account->balance = $net;
 
-
-
-
-
-        // $total = $trans->map(function ($tran) {
-
-        //     $array = [];
-        //     array_push($array, $tran->amount);
-        //     return $array;
-        //     //print_r($tran->amount . '<br>');
-        //     //print_r($sum . '<br>');
-
-
-        // });
-        // $credit = [];
-        // $debit = [];
-        // foreach ($trans as $key => $value) {
-        //     if ($value->type == "Deposit") {
-        //         array_push($credit, $value->amount);
-        //     }
-        //     if ($value->type != "Deposit") {
-        //         array_push($debit, $value->amount);
-        //     }
-        //     // array_push($bal, $value->amount);
-        // }
-        // // print_r($bal . '<br>');
-        // print(array_sum($credit) . '<br/>');
-        // print(array_sum($debit) . '<br/>');
-
-        // $loss = array_sum($credit);
-        // $gain = array_sum($debit);
-
-        // $net = $gain - $loss;
-
-        // $a = ($loss > $gain) ? -$net : $net;
-
-
-
-        // print($a);
-
-        //print_r(array_sum($total));
-
-        // print_r($total);
+        $account->save();
 
 
 
 
 
-        return  response()->json($out);
+        return  response()->json($data);
     }
 
 
@@ -106,6 +181,8 @@ class TransactionsController extends Controller
     public function store(TransactionRequest $request)
     {
         $trans = new Transaction;
+
+        $date = Carbon::parse($request->date);
         $trans->user_id = auth()->user()->id;
         $trans->acct_id = $request->acct_id;
         $trans->name = $request->name;
@@ -118,16 +195,6 @@ class TransactionsController extends Controller
         return response($trans);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
 
 

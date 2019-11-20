@@ -22,11 +22,32 @@ class ApiFutBolController extends Controller
             )
         );
 
-        $test = $response->body;
+        $players = $response->body->api->players;
 
-        //$array = array_unique($test);
+        $pl = json_encode($players, true);
 
-        return response()->json($test);
+        $en = json_decode($pl);
+
+        $player = array();
+
+        $test = array('test', 'test', 'call');
+
+        $go = array_values(array_unique($players));
+
+        // $compact = [];
+        // foreach ($en as $row) {
+        //     if (!in_array($row[$key], $compact)) {
+        //         $compact[] = $row;
+        //     }
+        // }
+        // $array = array_unique($players);
+        //$array =   array_map("array_unique", $test);
+        // $array = array_unique($players, SORT_REGULAR);
+        // foreach ($array as  $p) {
+        //     array_push($player, $p->player_id);
+        // }
+
+        return $go; //response()->json($players);
     }
 
     public function teamLeague($id)
