@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Account;
 use App\Http\Requests\TransactionRequest;
+use App\Http\Requests\TransactionUpdateRequest;
 use App\Http\Resources\TransactionResource;
 use App\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Transliterator;
 
 class TransactionsController extends Controller
 {
@@ -18,7 +20,7 @@ class TransactionsController extends Controller
      */
     public function index($id)
     {
-        $trans = Transaction::where('acct_id', $id)->orderBy('date', 'desc')->paginate(12);
+        $trans = Transaction::where('acct_id', $id)->orderBy('date', 'desc')->paginate(18);
 
         return TransactionResource::collection($trans);
 
@@ -36,7 +38,7 @@ class TransactionsController extends Controller
     public function dateRange(Request $request, $id)
     {
         $trans = Transaction::whereBetween('date', array($request->date, $request->date2))
-            ->where('acct_id', $id)->orderBy('date', 'desc')->paginate(30);
+            ->where('acct_id', $id)->orderBy('date', 'desc')->paginate(18);
         return TransactionResource::collection($trans);
     }
 
@@ -72,8 +74,6 @@ class TransactionsController extends Controller
         $data = [
 
             'trans' => $chart,
-            'current' => $current->toDateString(),
-            'month' => $lastThirty->toDateString(),
 
         ];
         //return json for api 

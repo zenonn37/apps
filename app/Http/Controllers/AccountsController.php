@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Account;
 use App\Http\Requests\AccountRequest;
+use App\Http\Requests\AccountUpdateRequest;
 use App\Http\Resources\AccountResource;
 use Illuminate\Http\Request;
 
@@ -55,14 +56,14 @@ class AccountsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AccountRequest $request, $id)
+    public function update(AccountUpdateRequest $request, $id)
     {
         $acct = Account::find($id);
 
 
         $acct->name = $request->name;
         $acct->type = $request->type;
-        $acct->balance = $request->balance;
+        // $acct->balance = $request->balance;
         $acct->date = $request->date;
 
         $acct->save();
