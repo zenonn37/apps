@@ -112,6 +112,10 @@ Route::delete('/expenese/{expenese}', 'ExpenseController@destroy')->middleware('
 
 //futbol api
 
-Route::post('/country', 'ApiFutBolController@country');
-Route::get('/teams_league/{id}', 'ApiFutBolController@teamLeague');
-Route::get('/teams_players/{id}', 'ApiFutBolController@teamsPlayers');
+// Route::post('/country', 'ApiFutBolController@country');
+// Route::get('/teams_league/{id}', 'ApiFutBolController@teamLeague');
+// Route::get('/teams_players/{id}', 'ApiFutBolController@teamsPlayers');
+Route::get('/timer-projects', 'TimerProjectsController@index');
+Route::post('/timer-projects-new', 'TimerProjectsController@store');
+Route::patch('/timer-projects-update/{project}', 'TimerProjectsController@update');
+Route::delete('/timer-projects-delete/{id}', 'TimerProjectsController@destroy');
