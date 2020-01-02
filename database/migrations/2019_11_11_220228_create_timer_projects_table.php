@@ -19,8 +19,8 @@ class CreateTimerProjectsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
             $table->boolean('completed')->default(0);
-            $table->date('complete')->nullable();
-            $table->string('goal');
+            $table->dateTimeTz('complete')->nullable();
+            $table->integer('goal');
             $table->timestamps();
         });
     }

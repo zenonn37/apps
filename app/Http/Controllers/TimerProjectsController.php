@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TimerProjectRequest;
+use App\Http\Resources\TimerProjectResource;
+use App\TimerProject;
+use App\TimerTask;
 use Illuminate\Http\Request;
 
 class TimerProjectsController extends Controller
@@ -13,18 +17,17 @@ class TimerProjectsController extends Controller
      */
     public function index()
     {
-        //
+        $projects = TimerProject::where('user_id', auth()->user()->id)->get();
+
+
+
+
+
+
+        return TimerProjectResource::collection($projects);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -32,9 +35,17 @@ class TimerProjectsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TimerProjectRequest $request)
     {
-        //
+        $project = new TimerProject;
+
+        $project->name = $request->name;
+        $project->goal = $request->goal;
+        $project->user_id = auth()->user()->id;
+
+        $project->save();
+
+        return new TimerProjectResource($project);
     }
 
     /**
@@ -48,16 +59,7 @@ class TimerProjectsController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.

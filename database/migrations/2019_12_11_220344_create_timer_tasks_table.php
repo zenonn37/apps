@@ -16,13 +16,15 @@ class CreateTimerTasksTable extends Migration
         Schema::create('timer_tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->index();
-            $table->unsignedInteger('project_id')->index();
+            $table->unsignedInteger('timer_project_id')->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('project_id')->references('id')->on('timer_projects')->onDelete('cascade');
+            $table->foreign('timer_project_id')->references('id')->on('timer_projects')->onDelete('cascade');
             $table->string('name');
-            $table->string('time');
-            $table->boolean('completed');
-            $table->date('complete');
+            $table->integer('goal');
+            $table->integer('actual');
+            $table->boolean('completed')->default(0);
+            $table->dateTimeTz('complete');
+            $table->dateTimeTz('date');
             $table->timestamps();
         });
     }

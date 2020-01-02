@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskTimerUpdateRequest;
+use App\Http\Requests\TimerTaskRequest;
+use App\Http\Resources\TaskResource;
+use App\Http\Resources\TimerTaskResource;
+use App\TimerTask;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use SebastianBergmann\Timer\Timer;
 
 class TimerTasksController extends Controller
 {
@@ -11,20 +18,45 @@ class TimerTasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        //get current date
+        $today = Carbon::today();
+        $tasks = TimerTask::where('timer_project_id', $id)
+            ->where('date', $today->toDateTimeString())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return TimerTaskResource::collection($tasks);
+
+        //return response()->json($today->toDateTimeString());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getAllTasks($id)
     {
-        //
+        $tasks = TimerTask::where('timer_project_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return TimerTaskResource::collection($tasks);
     }
+
+    public function filterDateRange($id, $startDate)
+    {
+        //$id timer_project_id
+        //$startDate number of days to search in the past
+
+        //set var to today minus days set by user
+        $pastDays = Carbon::today()->subDays($startDate);
+
+        $tasks = TimerTask::whereBetween('date', array($pastDays->toDateTimeString(), Carbon::today()->toDateTimeString()))
+            ->where('timer_project_id', $id)
+            ->orderBy('date', 'desc')
+            ->get();
+
+        return TimerTaskResource::collection($tasks);
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -32,32 +64,27 @@ class TimerTasksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TimerTaskRequest $request)
     {
-        //
+        $task = new TimerTask();
+
+        $task->user_id = auth()->user()->id;
+        $task->timer_project_id = $request->timer_project_id;
+        $task->name = $request->name;
+        $task->actual = $request->actual;
+        $task->goal = $request->goal;
+        $task->completed = $request->completed;
+        $task->complete = Carbon::now();
+        $task->date = Carbon::today()->toDateTimeString();
+
+        $task->save();
+
+        return new TimerTaskResource($task);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -66,9 +93,15 @@ class TimerTasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TaskTimerUpdateRequest $request, $id)
     {
-        //
+        $task = TimerTask::find($id);
+
+        $task->name = $request->name;
+
+        $task->save();
+
+        return new TimerTaskResource($task);
     }
 
     /**
@@ -79,6 +112,8 @@ class TimerTasksController extends Controller
      */
     public function destroy($id)
     {
-        //
+        TimerTask::destroy($id);
+
+        return response()->json('Destroyed', 200);
     }
 }

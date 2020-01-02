@@ -115,7 +115,17 @@ Route::delete('/expenese/{expenese}', 'ExpenseController@destroy')->middleware('
 // Route::post('/country', 'ApiFutBolController@country');
 // Route::get('/teams_league/{id}', 'ApiFutBolController@teamLeague');
 // Route::get('/teams_players/{id}', 'ApiFutBolController@teamsPlayers');
-Route::get('/timer-projects', 'TimerProjectsController@index');
-Route::post('/timer-projects-new', 'TimerProjectsController@store');
-Route::patch('/timer-projects-update/{project}', 'TimerProjectsController@update');
-Route::delete('/timer-projects-delete/{id}', 'TimerProjectsController@destroy');
+//timer projects
+Route::get('/timer-projects', 'TimerProjectsController@index')->middleware('auth:api');
+Route::post('/timer-projects-new', 'TimerProjectsController@store')->middleware('auth:api');
+Route::patch('/timer-projects-update/{project}', 'TimerProjectsController@update')->middleware('auth:api');
+Route::delete('/timer-projects-delete/{id}', 'TimerProjectsController@destroy')->middleware('auth:api');
+
+//timer tasks
+Route::get('/timer-task/{id}', 'TimerTasksController@index')->middleware('auth:api');
+Route::post('/timer-task-new', 'TimerTasksController@store')->middleware('auth:api');
+Route::patch('/timer-task-update/{task}', 'TimerTasksController@update')->middleware('auth:api');
+Route::delete('/timer-task-delete/{id}', 'TimerTasksController@destroy')->middleware('auth:api');
+Route::get('/filter-range/{id}/{days}', 'TimerTasksController@filterDateRange')->middleware('auth:api');
+Route::get('/timer-tasks-all/{id}', 'TimerTasksController@getAllTasks')->middleware('auth:api');
+//timer clock
