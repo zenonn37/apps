@@ -128,4 +128,11 @@ Route::patch('/timer-task-update/{task}', 'TimerTasksController@update')->middle
 Route::delete('/timer-task-delete/{id}', 'TimerTasksController@destroy')->middleware('auth:api');
 Route::get('/filter-range/{id}/{days}', 'TimerTasksController@filterDateRange')->middleware('auth:api');
 Route::get('/timer-tasks-all/{id}', 'TimerTasksController@getAllTasks')->middleware('auth:api');
+
 //timer clock
+Route::post('/clock-new', 'ClockController@store')->middleware('auth:api');
+Route::get('/clock', 'ClockController@index')->middleware('auth:api');
+Route::patch('/clock-new/{clock}', 'ClockController@update')->middleware('auth:api');
+Route::delete('/clock-new/{clock}', 'ClockController@destroy')->middleware('auth:api');
+Route::get('/filter-clock/{id}/{days}', 'ClockController@filterDateRange')->middleware('auth:api');
+Route::get('/clock-all/{id}', 'ClockController@getAllClocks')->middleware('auth:api');

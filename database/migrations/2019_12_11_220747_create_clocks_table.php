@@ -20,6 +20,7 @@ class CreateClocksTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('timer_project_id')->references('id')->on('timer_projects')->onDelete('cascade');
             $table->integer('seconds');
+            $table->dateTimeTz('date');
             $table->timestamps();
         });
     }
