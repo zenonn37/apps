@@ -25,7 +25,8 @@ class TimerProjectRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:2|max:40',
-            'goal' => 'required|string|min:1|max:10'
+            'goal' => 'required|integer|min:3600',
+            'completed' => 'required'
         ];
     }
 }

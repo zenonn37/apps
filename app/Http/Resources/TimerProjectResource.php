@@ -21,7 +21,8 @@ class TimerProjectResource extends JsonResource
             "goal" => $this->goal,
             "completed" => $this->completed,
             "complete" => $this->complete,
-            'tasks' => TimerTaskResource::collection($this->timer_tasks)
+            'tasks' => TimerTaskResource::collection($this->timer_tasks)->count(),
+            'seconds' => ClockResource::collection($this->project_clocks)->sum('seconds')
 
         ];
     }

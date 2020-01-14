@@ -9,7 +9,8 @@ use App\Http\Resources\TimerTaskResource;
 use App\TimerTask;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use SebastianBergmann\Timer\Timer;
+
+use Illuminate\Support\Facades\DB;
 
 class TimerTasksController extends Controller
 {
@@ -38,6 +39,45 @@ class TimerTasksController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         return TimerTaskResource::collection($tasks);
+    }
+
+    public function getPastWeek($id)
+    {
+        $pastSixDays = Carbon::today()->subDays(6);
+
+        // $test =  DB::table('timer_tasks')
+        //     ->select(DB::raw('date'), DB::raw('count(*) as tasks '))
+        //     ->where('timer_project_id', $id)
+        //     ->where('completed', true)
+        //     ->groupBy('date')
+        //     ->get();
+
+        $task = TimerTask::whereBetween('date', array($pastSixDays->toDateTimeString(), Carbon::today()->toDateTimeString()))
+            ->where('timer_project_id', $id)
+            ->where('completed', true)
+            ->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('count(*) as tasks')
+            ));
+        return response()->json($task);
+
+        //         $tasks = TimerTask::whereBetween('date', array($pastSixDays->toDateTimeString(), Carbon::today()->toDateTimeString()))
+        //             ->where('timer_project_id', $id)
+        //             ->orderBy('date', 'desc')
+        //             ->get();
+
+
+
+        //         //$collection->duplicates();
+        //   //$retVal = (condition) ? a : b ;
+        //         $collection = TimerTaskResource::collection($tasks);
+
+        //         $newCollection = $collection->map(function($item, $key){
+        //                if ($item->date) {
+        //                    # code...
+        //                }
+        //         });
     }
 
     public function filterDateRange($id, $startDate)

@@ -12,4 +12,9 @@ class TimerProject extends Model
     {
         return $this->hasMany(TimerTask::class);
     }
+
+    public function project_clocks()
+    {
+        return $this->hasMany(Clock::class);
+    }
 }

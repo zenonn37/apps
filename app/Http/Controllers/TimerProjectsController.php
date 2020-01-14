@@ -6,6 +6,7 @@ use App\Http\Requests\TimerProjectRequest;
 use App\Http\Resources\TimerProjectResource;
 use App\TimerProject;
 use App\TimerTask;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TimerProjectsController extends Controller
@@ -17,12 +18,9 @@ class TimerProjectsController extends Controller
      */
     public function index()
     {
-        $projects = TimerProject::where('user_id', auth()->user()->id)->get();
-
-
-
-
-
+        $projects = TimerProject::where('user_id', auth()->user()->id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         return TimerProjectResource::collection($projects);
     }
@@ -48,16 +46,7 @@ class TimerProjectsController extends Controller
         return new TimerProjectResource($project);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+
 
 
 
@@ -68,9 +57,26 @@ class TimerProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TimerProjectRequest $request, $id)
     {
-        //
+        $project  = TimerProject::find($id);
+
+        $project->name = $request->name;
+        $project->goal = $request->goal;
+
+
+
+        if ($request->completed) {
+            $project->completed = 1;
+            $project->complete = Carbon::today()->toDateTimeString(); # code...
+        } else {
+            $project->completed = 0;
+            $project->complete = NULL; #
+        }
+
+        $project->save();
+
+        return new TimerProjectResource($project);
     }
 
     /**
@@ -81,6 +87,8 @@ class TimerProjectsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        TimerProject::destroy($id);
+
+        return response()->json('Deleted', 200);
     }
 }
