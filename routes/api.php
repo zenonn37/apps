@@ -110,11 +110,7 @@ Route::patch('/expenese/{expenese}', 'ExpenseController@update')->middleware('au
 Route::delete('/expenese/{expenese}', 'ExpenseController@destroy')->middleware('auth:api');
 
 
-//futbol api
 
-// Route::post('/country', 'ApiFutBolController@country');
-// Route::get('/teams_league/{id}', 'ApiFutBolController@teamLeague');
-// Route::get('/teams_players/{id}', 'ApiFutBolController@teamsPlayers');
 //timer projects
 Route::get('/timer-projects', 'TimerProjectsController@index')->middleware('auth:api');
 Route::post('/timer-projects-new', 'TimerProjectsController@store')->middleware('auth:api');
@@ -129,6 +125,9 @@ Route::delete('/timer-task-delete/{id}', 'TimerTasksController@destroy')->middle
 Route::get('/filter-range/{id}/{days}', 'TimerTasksController@filterDateRange')->middleware('auth:api');
 Route::get('/timer-tasks-all/{id}', 'TimerTasksController@getAllTasks')->middleware('auth:api');
 Route::get('/past-week/{id}', 'TimerTasksController@getPastWeek')->middleware('auth:api');
+Route::post('/filter_task_chart', 'TimerTasksController@filterTaskChart')->middleware('auth:api');
+Route::get('/global_task_chart', 'TimerTasksController@globalTaskChart')->middleware('auth:api');
+Route::post('/filter-task-chart-project/{id}', 'TimerTasksController@filterTaskChartProject')->middleware('auth:api');
 
 //timer clock
 Route::post('/clock-new', 'ClockController@store')->middleware('auth:api');
@@ -137,6 +136,10 @@ Route::patch('/clock-update/{clock}', 'ClockController@update')->middleware('aut
 Route::delete('/clock-delete/{clock}', 'ClockController@destroy')->middleware('auth:api');
 Route::get('/filter-clock/{id}/{days}', 'ClockController@filterDateRange')->middleware('auth:api');
 Route::get('/clock-all/{id}', 'ClockController@getAllClocks')->middleware('auth:api');
+Route::get('/clock-chart', 'ClockController@clockChart')->middleware('auth:api');
+Route::get('/clock-chart/{id}', 'ClockController@clockChartProject')->middleware('auth:api');
+Route::post('/clock-chart-filter', 'ClockController@filterClockChart')->middleware('auth:api');
+Route::post('/clock-chart-filter-project/{id}', 'ClockController@filterClockChartProject')->middleware('auth:api');
 
 //Entries
 Route::post('/entries-new', 'EntryController@store')->middleware('auth:api');

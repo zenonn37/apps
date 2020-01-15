@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Clock;
 use App\Entry;
+use App\Http\Requests\ClockChartRequest;
 use App\Http\Requests\ClockRequest;
 use App\Http\Requests\EntryRequest;
 use App\Http\Resources\ClockResource;
@@ -35,14 +36,76 @@ class ClockController extends Controller
 
     public function clockChart()
     {
+        //MYSQL
+        //SELECT date, SUM('seconds') AS time
+        //FROM clocks 
+        //WHERE user_id = $id
+        //GROUP BY date
+
+        //we need to total the entries first from ENTRY Model by timer_project_id
+
+        //input that value into TIMERTASK Model seconds column
+
         $user_id = auth()->user()->id;
-        $pastSixDays = Carbon::today()->subDays(6)->toDateTimeString();
+        $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
         $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
             ->where('user_id', $user_id)
             ->groupBy('date')
             ->get(array(
                 DB::raw('date'),
-                DB::raw('count(*) as clocks')
+                DB::raw('SUM(seconds) as seconds'),
+
+            ));
+
+
+
+        return response()->json($clock);
+    }
+    public function clockChartProject($id)
+    {
+
+
+
+        $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
+        $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
+            ->where('timer_project_id', $id)
+            // ->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('seconds'),
+
+            ));
+
+
+
+        return response()->json($clock);
+    }
+
+    public function filterClockChart(ClockChartRequest $request)
+    {
+        $user_id = auth()->user()->id;
+        $clock = Clock::whereBetween('date', array($request->start, $request->end))
+            ->where('user_id', $user_id)
+            // ->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('seconds'),
+
+            ));
+
+        return response()->json($clock);
+    }
+
+    public function filterClockChartProject(ClockChartRequest $request, $id)
+    {
+
+        $clock = Clock::whereBetween('date', array($request->start, $request->end))
+            ->where('timer_project_id', $id)
+            //->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('seconds'),
+
             ));
 
         return response()->json($clock);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClockChartRequest;
 use App\Http\Requests\TaskTimerUpdateRequest;
 use App\Http\Requests\TimerTaskRequest;
 use App\Http\Resources\TaskResource;
@@ -78,6 +79,52 @@ class TimerTasksController extends Controller
         //                    # code...
         //                }
         //         });
+    }
+
+
+    public function globalTaskChart()
+    {
+
+        $user_id = auth()->user()->id;
+
+        $pastSixDays = Carbon::today()->subDays(6);
+
+        $task = TimerTask::whereBetween('date', array($pastSixDays->toDateTimeString(), Carbon::today()->toDateTimeString()))
+            ->where('user_id', $user_id)
+            ->where('completed', true)
+            ->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('count(*) as tasks')
+            ));
+        return response()->json($task);
+    }
+
+    public function filterTaskChart(ClockChartRequest $request)
+    {
+        $user_id = auth()->user()->id;
+        $clock = TimerTask::whereBetween('date', array($request->start, $request->end))
+            ->where('user_id', $user_id)
+            ->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('count(*) as tasks')
+            ));
+
+        return response()->json($clock);
+    }
+    public function filterTaskChartProject(ClockChartRequest $request, $id)
+    {
+
+        $clock = TimerTask::whereBetween('date', array($request->start, $request->end))
+            ->where('timer_project_id', $id)
+            ->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('count(*) as tasks')
+            ));
+
+        return response()->json($clock);
     }
 
     public function filterDateRange($id, $startDate)
