@@ -137,7 +137,7 @@ class TimerTasksController extends Controller
 
         $tasks = TimerTask::whereBetween('date', array($pastDays->toDateTimeString(), Carbon::today()->toDateTimeString()))
             ->where('timer_project_id', $id)
-            ->orderBy('date', 'desc')
+            ->orderBy('date', 'ASC')
             ->get();
 
         return TimerTaskResource::collection($tasks);
