@@ -9,6 +9,7 @@ use App\Http\Resources\TransactionResource;
 use App\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Transliterator;
 
 class TransactionsController extends Controller
@@ -20,12 +21,54 @@ class TransactionsController extends Controller
      */
     public function index($id)
     {
-        $trans = Transaction::where('acct_id', $id)->orderBy('date', 'desc')->paginate(18);
+
+        //get current date
+        $current = Carbon::today();
+        //subtract 30 days from current date
+        $lastThirty =  Carbon::today()->subDays(30);
+        //get data between today and thirty days ago
+
+
+
+        $trans = Transaction::whereBetween('date', array($lastThirty->toDateString(), $current->toDateString()))
+            ->where('acct_id', $id)
+            ->orderBy('date', 'desc')
+            ->paginate(18);
 
         return TransactionResource::collection($trans);
 
         //return response($trans);
     }
+
+    //add all transaction for per day
+
+    public function  addTransactions($id)
+    {
+        $trans = Transaction::where('acct_id', $id)
+
+            ->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('SUM(amount) as transactions')
+            ));
+
+        return response()->json($trans);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function singleDay(Request $request, $id)
     {
@@ -53,31 +96,35 @@ class TransactionsController extends Controller
         $lastThirty =  Carbon::today()->subDays(30);
         //get data between today and thirty days ago
         $trans = Transaction::whereBetween('date', array($lastThirty->toDateString(), $current->toDateString()))
-            ->where('user_id', $user)->orderBy('date', 'asc')
-            ->get();
+            ->where('user_id', $user)
+            ->groupBy('date')
+            ->get(array(
+                DB::raw('date'),
+                DB::raw('SUM(amount) as amount')
+            ));
 
 
-        //array for charts
-        $chart = array();
+        // //array for charts
+        // $chart = array();
 
-        foreach ($trans as $data) {
-            //push data into array
-            array_push(
-                $chart,
-                [
-                    'amount' => $data->amount,
-                    'date' => $data->date
-                ]
-            );
-        }
-        //create php object
-        $data = [
+        // foreach ($trans as $data) {
+        //     //push data into array
+        //     array_push(
+        //         $chart,
+        //         [
+        //             'amount' => $data->amount,
+        //             'date' => $data->date
+        //         ]
+        //     );
+        // }
+        // //create php object
+        // $data = [
 
-            'trans' => $chart,
+        //     'trans' => $chart,
 
-        ];
+        // ];
         //return json for api 
-        return response()->json($data);
+        return response()->json($trans);
     }
 
     public function netWorth()
