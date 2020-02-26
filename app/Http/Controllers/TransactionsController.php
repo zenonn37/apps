@@ -104,26 +104,6 @@ class TransactionsController extends Controller
             ));
 
 
-        // //array for charts
-        // $chart = array();
-
-        // foreach ($trans as $data) {
-        //     //push data into array
-        //     array_push(
-        //         $chart,
-        //         [
-        //             'amount' => $data->amount,
-        //             'date' => $data->date
-        //         ]
-        //     );
-        // }
-        // //create php object
-        // $data = [
-
-        //     'trans' => $chart,
-
-        // ];
-        //return json for api 
         return response()->json($trans);
     }
 
@@ -131,43 +111,52 @@ class TransactionsController extends Controller
     {
 
         $user = auth()->user()->id;
-        $trans = Transaction::where('user_id', $user)->get();
 
-        $credit = array();
-        $debit = array();
-        $all = array();
-        $chart = array();
+         //get deposits
+         $deposits = Transaction::where('user_id',$user)
+          ->where('type', '=' ,'Deposit')
+          ->groupBy('user_id')
+          ->get(array(
+                DB::raw('Sum(amount) as amount')
+          ));
 
+          $credit = Transaction::where('user_id',$user)
+          ->where('type', '!=' ,'Deposit')
+          ->groupBy('user_id')
+          ->get(array(
+                DB::raw('Sum(amount) as amount')
+          ));
 
-        foreach ($trans as $key => $value) {
-            array_push($all, $value->amount);
-            array_push(
-                $chart,
-                [
-                    'amount' => $value->amount,
-                    'date' => $value->date
-                ]
+          $count = Transaction::where('user_id',$user)
+          ->where('type', '!=' ,'Deposit')
+          ->get(array(
+            DB::raw('Count(id) as count')
+          ));
 
-            );
-            if ($value->type != "Deposit") {
-                array_push($debit, $value->amount);
-            } else {
-                array_push($credit, $value->amount);
-            }
-        }
+          $avg = Transaction::where('user_id',$user)
+          ->where('type', '!=' ,'Deposit')
+          ->groupBy('user_id')
+          ->get(array(
+           DB::raw('AVG(amount) as average')
+          ));
 
-        $dep = array_sum($credit);
-        $deb =  array_sum($debit);
-        $transaction =  count($all);
+     $trans = Transaction::where('user_id', $user)
+     ->where('type', '!=' ,'Deposit')
+     ->get(array(
+         DB::raw('amount')
+     ));
 
-        $net = $dep - $deb;
+    
+
+         $net = $deposits[0]->amount - $credit[0]->amount;
         $data = [
-            'transactions' => $deb,
-            'deposits' => $dep,
+            'transactions' => $credit[0]->amount,
+            'deposits' => $deposits[0]->amount,
             'spent' => $net,
-            'count' => $transaction,
-            'all' => $all,
-            'charts' => $chart
+            'count' => $count[0]->count,
+            'avg' => $avg[0]->average,
+             'all' => $trans,
+          
         ];
 
         return response()->json($data);
