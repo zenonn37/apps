@@ -73,10 +73,10 @@ class ClockController extends Controller
         $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
         $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
             ->where('timer_project_id', $id)
-            // ->groupBy('date')
+             ->groupBy('date')
             ->get(array(
                 DB::raw('date'),
-                DB::raw('seconds'),
+                DB::raw('SUM(seconds) as seconds'),
 
             ));
 
