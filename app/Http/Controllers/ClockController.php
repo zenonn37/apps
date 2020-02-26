@@ -46,6 +46,10 @@ class ClockController extends Controller
 
         //input that value into TIMERTASK Model seconds column
 
+        //SELECT date, Sum(seconds) as seconds FROM clocks
+        //WHERE user_id = $id
+        //GROUP BY date
+
         $user_id = auth()->user()->id;
         $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
         $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
@@ -86,10 +90,10 @@ class ClockController extends Controller
         $user_id = auth()->user()->id;
         $clock = Clock::whereBetween('date', array($request->start, $request->end))
             ->where('user_id', $user_id)
-            // ->groupBy('date')
+            ->groupBy('date')
             ->get(array(
                 DB::raw('date'),
-                DB::raw('seconds'),
+                DB::raw('SUM(seconds) as seconds'),
 
             ));
 
@@ -101,10 +105,10 @@ class ClockController extends Controller
 
         $clock = Clock::whereBetween('date', array($request->start, $request->end))
             ->where('timer_project_id', $id)
-            //->groupBy('date')
+            ->groupBy('date')
             ->get(array(
                 DB::raw('date'),
-                DB::raw('seconds'),
+                DB::raw('SUM(seconds) as seconds'),
 
             ));
 
