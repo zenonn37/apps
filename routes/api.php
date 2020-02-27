@@ -131,6 +131,7 @@ Route::post('/filter-task-chart-project/{id}', 'TimerTasksController@filterTaskC
 
 //timer clock
 Route::post('/clock-new', 'ClockController@store')->middleware('auth:api');
+Route::get('/clock_all', 'ClockController@clock_all')->middleware('auth:api');
 Route::get('/clock/{id}', 'ClockController@index')->middleware('auth:api');
 Route::patch('/clock-update/{clock}', 'ClockController@update')->middleware('auth:api');
 Route::delete('/clock-delete/{clock}', 'ClockController@destroy')->middleware('auth:api');

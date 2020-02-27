@@ -19,6 +19,7 @@ class ClockResource extends JsonResource
             'date' => $this->date,
             'created_at' => $this->created_at,
             'id' => $this->id,
+            'project' => $this->project,
             'entries_count' => EntryResource::collection($this->clock_entrys)->count(),
             'entries_sum' => EntryResource::collection($this->clock_entrys)->sum('seconds'),
             'entries' => EntryResource::collection($this->clock_entrys)

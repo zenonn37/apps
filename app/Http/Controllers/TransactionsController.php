@@ -40,6 +40,8 @@ class TransactionsController extends Controller
         //return response($trans);
     }
 
+    
+
     //add all transaction for per day
 
     public function  addTransactions($id)

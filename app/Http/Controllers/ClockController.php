@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Clock;
 use App\Entry;
+use App\TimerProject;
 use App\Http\Requests\ClockChartRequest;
 use App\Http\Requests\ClockRequest;
 use App\Http\Requests\EntryRequest;
@@ -32,6 +33,17 @@ class ClockController extends Controller
             ->get();
 
         return ClockResource::collection($clock);
+    }
+
+    public function clock_all(){
+        $user = auth()->user()->id;
+
+        $clock = Clock::where('user_id',$user)
+         ->orderBy('updated_at', 'DESC')
+        ->get();
+
+        return ClockResource::collection($clock);
+        
     }
 
     public function clockChart()
@@ -132,8 +144,13 @@ class ClockController extends Controller
 
         $clock->seconds =  $request->time;
         $clock->timer_project_id = $request->project_id;
+
+        //get project name
+        $project = TimerProject::find($request->project_id);
+
         $clock->date = Carbon::today()->toDateTimeString();
         $clock->user_id = $user_id;
+        $clock->project = $project->name;
 
         $clock->save();
         //add clock entries

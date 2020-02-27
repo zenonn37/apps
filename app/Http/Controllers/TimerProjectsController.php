@@ -6,6 +6,7 @@ use App\Http\Requests\TimerProjectRequest;
 use App\Http\Resources\TimerProjectResource;
 use App\TimerProject;
 use App\TimerTask;
+use App\Clock;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -64,7 +65,10 @@ class TimerProjectsController extends Controller
         $project->name = $request->name;
         $project->goal = $request->goal;
 
-
+        Clock::where('timer_project_id','=',$id)
+         ->update(['project' => $request->name ]);
+        
+       
 
         if ($request->completed) {
             $project->completed = 1;
