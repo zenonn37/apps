@@ -39,7 +39,7 @@ class ClockController extends Controller
         $user = auth()->user()->id;
 
         $clock = Clock::where('user_id',$user)
-         ->orderBy('updated_at', 'DESC')
+         ->orderBy('created_at', 'DESC')
         ->get();
 
         return ClockResource::collection($clock);

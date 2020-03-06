@@ -114,54 +114,73 @@ class TransactionsController extends Controller
 
         $user = auth()->user()->id;
 
-         //get deposits
-         $deposits = Transaction::where('user_id',$user)
-          ->where('type', '=' ,'Deposit')
-          ->groupBy('user_id')
-          ->get(array(
-                DB::raw('Sum(amount) as amount')
-          ));
+         //get current date
+         $current = Carbon::today();
+         //subtract 30 days from current date
+         $lastThirty =  Carbon::today()->subDays(30);
+         //get data between today and thirty days ago
 
-          $credit = Transaction::where('user_id',$user)
-          ->where('type', '!=' ,'Deposit')
-          ->groupBy('user_id')
-          ->get(array(
-                DB::raw('Sum(amount) as amount')
-          ));
+       
+            //check for at least one transaction else return [];
 
-          $count = Transaction::where('user_id',$user)
-          ->where('type', '!=' ,'Deposit')
-          ->get(array(
-            DB::raw('Count(id) as count')
-          ));
+        // get deposits
+         $deposits = Transaction::whereBetween('date',array($lastThirty->toDateString(), $current->toDateString()))
+         ->where('user_id',$user)
+         ->where('type', '=' ,'Deposit')
+         ->groupBy('user_id')
+         ->get(array(
+               DB::raw('Sum(amount) as amount')
+         ));
 
-          $avg = Transaction::where('user_id',$user)
-          ->where('type', '!=' ,'Deposit')
-          ->groupBy('user_id')
-          ->get(array(
-           DB::raw('AVG(amount) as average')
-          ));
+         
 
-     $trans = Transaction::where('user_id', $user)
-     ->where('type', '!=' ,'Deposit')
-     ->get(array(
-         DB::raw('amount')
-     ));
+         $all = Transaction::whereBetween('date',array($lastThirty->toDateString(), $current->toDateString()))
+         ->where('user_id',$user)
+         ->where('type', '!=' ,'Deposit')
+         ->groupBy('user_id')
+         ->get(array(
+               DB::raw('Sum(amount) as amount'),
+               DB::raw('Count(id) as count'),
+               DB::raw('AVG(amount) as average'),
+           
+         ));
+         
 
-    
+    //     
 
-         $net = $deposits[0]->amount - $credit[0]->amount;
-        $data = [
-            'transactions' => $credit[0]->amount,
-            'deposits' => $deposits[0]->amount,
-            'spent' => $net,
-            'count' => $count[0]->count,
-            'avg' => $avg[0]->average,
-             'all' => $trans,
-          
-        ];
+    $trans = 0;
+    $count = 0;
+    $avg = 0;
+    $dep = 0;
 
-        return response()->json($data);
+     foreach ($all as $value) {
+         $trans = $value->amount;
+         $count = $value->count;
+         $avg = $value->average;
+         
+     }
+     foreach ($deposits as $value) {
+        $dep = $value->amount;
+     }
+
+      $daily = $trans / 30;
+      $net = ($dep - $trans); 
+
+    $data = [
+         
+         'deposits' => $dep,
+         'amount' => $trans,
+         'count' => $count,
+         'average' => $avg,
+         'daily' => $daily,
+         'net' =>  $net
+         
+    ];
+
+       return response()->json($data);
+         
+  
+        
     }
 
 
