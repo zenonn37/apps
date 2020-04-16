@@ -56,8 +56,8 @@ class EntryController extends Controller
         $user_id = auth()->user()->id;
         $timer_project_id = $request->project_id;
         $entries = new Entry();
-        $today = Carbon::today();
-
+        $today = Carbon::today()->toDateString();
+       
         $entries->user_id = $user_id;
         $entries->seconds = $request->time;
         $entries->timer_project_id = $timer_project_id;
@@ -67,6 +67,18 @@ class EntryController extends Controller
         $entries->new_entry = $today;
 
         $entries->save();
+
+        // $entry = DB::table('entries')->insert(
+        //     [
+        //         'user_id' => $user_id,
+        //          'seconds' => $request->time,
+        //          'timer_project_id' => $timer_project_id,
+        //          'clock_id' => $request->clock_id,
+        //          'start_time' => $request->start,
+        //          'end_time' => $request->end,
+        //          'new_entry' => DB::raw('curdate()')
+        //     ]
+        // );
 
 
 
