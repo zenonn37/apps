@@ -144,6 +144,7 @@ Route::post('/clock-chart-filter-project/{id}', 'ClockController@filterClockChar
 
 //Entries
 Route::post('/entries-new', 'EntryController@store')->middleware('auth:api');
-Route::get('/entries/{id}', 'EntryControllerr@index')->middleware('auth:api');
+Route::get('/entries/{id}', 'EntryController@index')->middleware('auth:api');
 Route::patch('/entries-update/{id}', 'EntryController@update')->middleware('auth:api');
 Route::delete('/entries-delete/{id}', 'EntryController@destroy')->middleware('auth:api');
+Route::get('/entry_all','EntryController@entryAll')->middleware('auth:api');

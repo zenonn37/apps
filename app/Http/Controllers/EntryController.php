@@ -7,6 +7,7 @@ use App\Entry;
 use App\Http\Requests\EntryRequest;
 use App\Http\Resources\EntryResource;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class EntryController extends Controller
 {
@@ -17,6 +18,37 @@ class EntryController extends Controller
         //hold off until charting
     }
 
+    public function entryAll(){
+
+        //Select Sum(seconds) as seconds
+        //FROM entries
+        //WHERE user_id = $user_id
+        //GROUP BY user_id
+        
+        $user_id = auth()->user()->id;
+
+         
+        // $entries = DB::select('select new_entry, SUM(seconds) as seconds
+        // from entries
+        //  where user_id = ?
+        //  group by new_entry
+        // '[$user_id]);
+      
+        // return response()->json($entries);
+
+
+
+        $entry = Entry::where('user_id',$user_id)
+        ->groupBy('new_entry')
+        ->get(array(
+         DB::raw('new_entry'),
+
+         DB::raw('SUM(seconds) as seconds')
+        ));
+
+        return response()->json($entry);
+    }
+
 
     public function store(EntryRequest $request)
     {
@@ -24,6 +56,7 @@ class EntryController extends Controller
         $user_id = auth()->user()->id;
         $timer_project_id = $request->project_id;
         $entries = new Entry();
+        $today = Carbon::today();
 
         $entries->user_id = $user_id;
         $entries->seconds = $request->time;
@@ -31,6 +64,7 @@ class EntryController extends Controller
         $entries->clock_id = $request->clock_id;
         $entries->start_time = $request->start;
         $entries->end_time = $request->end;
+        $entries->new_entry = $today;
 
         $entries->save();
 

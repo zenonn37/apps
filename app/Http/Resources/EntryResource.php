@@ -20,7 +20,8 @@ class EntryResource extends JsonResource
             'timer_project_id' => $this->timer_project_id,
             'clock_id' => $this->clock_id,
             'start' => $this->start_time,
-            'end' => $this->end_time
+            'end' => $this->end_time,
+            'new_entry'=> $this->new_entry
         ];
     }
 }

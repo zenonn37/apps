@@ -35,6 +35,11 @@ class ClockController extends Controller
         return ClockResource::collection($clock);
     }
 
+
+
+
+
+
     public function clock_all(){
         $user = auth()->user()->id;
 
@@ -64,19 +69,34 @@ class ClockController extends Controller
 
         $user_id = auth()->user()->id;
         $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
-        $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
-            ->where('user_id', $user_id)
-            ->groupBy('date')
-            ->get(array(
-                DB::raw('date'),
-                DB::raw('SUM(seconds) as seconds'),
+        // $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
+        //     ->where('user_id', $user_id)
+        //     ->groupBy('date')
+        //     ->get(array(
+        //         DB::raw('date'),
+        //         DB::raw('SUM(seconds) as seconds'),
 
-            ));
+        //     ));
+
+
+            $entry = Entry::whereBetween('new_entry',array($pastSixDays, Carbon::today()->toDateTimeString()))
+              ->where('user_id',$user_id)
+              ->groupBy('new_entry')
+              ->get(array(
+                  DB::raw('new_entry as date' ),
+                  DB::raw('SUM(seconds) as seconds')
+
+              ));
 
 
 
-        return response()->json($clock);
+        return response()->json( $entry);
     }
+
+
+
+
+
     public function clockChartProject($id)
     {
 
