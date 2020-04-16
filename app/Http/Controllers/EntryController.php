@@ -86,15 +86,15 @@ class EntryController extends Controller
 
         //input that value into TIMERTASK Model seconds column
 
-        $entry = Entry::where('timer_project_id', $timer_project_id)
+        // $entry = Entry::where('timer_project_id', $timer_project_id)
 
-            ->get(DB::raw('SUM(seconds) as seconds'));
+        //     ->get(DB::raw('SUM(seconds) as seconds'));
 
-        $clock = Clock::find($request->clock_id);
+        // $clock = Clock::find($request->clock_id);
 
-        $clock->seconds = $entry[0]->seconds;
+        // $clock->seconds = $entry[0]->seconds;
 
-        $clock->save();
+        // $clock->save();
 
 
         //output for charts clocks
