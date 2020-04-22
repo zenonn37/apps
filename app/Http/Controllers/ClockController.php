@@ -183,6 +183,7 @@ class ClockController extends Controller
         $entries->clock_id = $clock->id;
         $entries->start_time = $req->start;
         $entries->end_time = $req->end;
+        $entries->new_entry = Carbon::today()->toDateString();
 
         $entries->save();
 
