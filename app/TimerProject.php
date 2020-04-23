@@ -17,4 +17,8 @@ class TimerProject extends Model
     {
         return $this->hasMany(Clock::class);
     }
+
+    public function entrys(){
+        return $this->hasMany(Entry::class);
+    }
 }
