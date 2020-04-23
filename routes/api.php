@@ -141,10 +141,11 @@ Route::get('/clock-chart', 'ClockController@clockChart')->middleware('auth:api')
 Route::get('/clock-chart/{id}', 'ClockController@clockChartProject')->middleware('auth:api');
 Route::post('/clock-chart-filter', 'ClockController@filterClockChart')->middleware('auth:api');
 Route::post('/clock-chart-filter-project/{id}', 'ClockController@filterClockChartProject')->middleware('auth:api');
-
+Route::get('/clock_report/{entry}','ClockController@clockReport')->middleware('auth:api');
 //Entries
 Route::post('/entries-new', 'EntryController@store')->middleware('auth:api');
 Route::get('/entries/{id}', 'EntryController@index')->middleware('auth:api');
 Route::patch('/entries-update/{id}', 'EntryController@update')->middleware('auth:api');
 Route::delete('/entries-delete/{id}', 'EntryController@destroy')->middleware('auth:api');
 Route::get('/entry_all','EntryController@entryAll')->middleware('auth:api');
+

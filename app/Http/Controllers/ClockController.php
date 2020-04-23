@@ -42,8 +42,11 @@ class ClockController extends Controller
 
     public function clock_all(){
         $user = auth()->user()->id;
+        $oneDay = Carbon::today()->subDays(0);
 
-        $clock = Clock::where('user_id',$user)
+
+        $clock = Clock::whereBetween('date',array($oneDay->toDateTimeString(),Carbon::today()->toDateTimeString()))
+         ->where('user_id',$user)
          ->orderBy('created_at', 'DESC')
         ->get();
 
@@ -146,6 +149,25 @@ class ClockController extends Controller
 
         return response()->json($clock);
     }
+
+    public function clockReport($startDate)
+    {
+        //$id timer_project_id
+        //$startDate number of days to search in the past
+        $user_id = auth()->user()->id;
+        //set var to today minus days set by user
+        $pastDays = Carbon::today()->subDays($startDate);
+
+        $clock = Clock::whereBetween('date', array($pastDays->toDateTimeString(), Carbon::today()->toDateTimeString()))
+            ->where('user_id', $user_id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+            return ClockResource::collection($clock);
+    }
+
+
+
 
 
 
