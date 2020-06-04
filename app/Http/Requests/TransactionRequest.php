@@ -25,6 +25,7 @@ class TransactionRequest extends FormRequest
     {
         return [
             "name" => "required|min:2|max:30|string",
+             "category" => "required|string",
             'amount' => 'required|min:1',
             'type' => 'required|min:3|string',
             'acct_id' => 'required|integer',

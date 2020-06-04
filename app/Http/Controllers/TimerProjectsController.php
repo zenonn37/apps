@@ -17,13 +17,27 @@ class TimerProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($bool)
     {
+
+      
         $projects = TimerProject::where('user_id', auth()->user()->id)
-            ->orderBy('created_at', 'DESC')
+            ->where('completed',$bool)
+            ->orderBy('updated_at', 'DESC')
             ->get();
 
         return TimerProjectResource::collection($projects);
+    }
+
+    public function search(Request $request){
+
+        $term = $request->term;
+        $projects = TimerProject::where('user_id', auth()->user()->id)
+        ->where('name','like',"%$term%" )
+        ->orderBy('updated_at', 'DESC')
+        ->get();
+        return TimerProjectResource::collection($projects);
+       // return response()->json($term);
     }
 
 

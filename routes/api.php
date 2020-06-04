@@ -55,7 +55,7 @@ Route::get('/food/{food}', 'ApiRecipeController@recipe');
 
 
 //Task API
-Route::get('/projects', 'ProjectController@index')->middleware('auth:api');
+Route::get('/projects/{boolean}', 'ProjectController@index')->middleware('auth:api');
 Route::post('/projects', 'ProjectController@store')->middleware('auth:api');
 Route::get('/projects/{project}', 'ProjectController@show')->middleware('auth:api');
 Route::patch('/projects/{project}', 'ProjectController@update')->middleware('auth:api');
@@ -112,7 +112,8 @@ Route::delete('/expenese/{expenese}', 'ExpenseController@destroy')->middleware('
 
 
 //timer projects
-Route::get('/timer-projects', 'TimerProjectsController@index')->middleware('auth:api');
+Route::get('/timer-projects/{boolean}', 'TimerProjectsController@index')->middleware('auth:api');
+Route::post('/timer-projects', 'TimerProjectsController@search')->middleware('auth:api');
 Route::post('/timer-projects-new', 'TimerProjectsController@store')->middleware('auth:api');
 Route::patch('/timer-projects-update/{project}', 'TimerProjectsController@update')->middleware('auth:api');
 Route::delete('/timer-projects-delete/{id}', 'TimerProjectsController@destroy')->middleware('auth:api');

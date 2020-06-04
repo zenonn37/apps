@@ -246,6 +246,7 @@ class TransactionsController extends Controller
         $trans->type = $request->type;
         $trans->amount = $request->amount;
         $trans->date = $request->date;
+        $trans->category = $request->category;
 
         $trans->save();
 
@@ -272,6 +273,7 @@ class TransactionsController extends Controller
         $transaction->type = $request->type;
         $transaction->amount = $request->amount;
         $transaction->date = $request->date;
+        $transaction->category = $request->category;
 
         $transaction->save();
 
@@ -289,9 +291,9 @@ class TransactionsController extends Controller
     {
         Transaction::destroy($id);
 
-        $test = 'Transaction Removed';
+        $destroy = 'Transaction Removed';
 
 
-        return response()->json($test, 200);
+        return response()->json($destroy, 200);
     }
 }
