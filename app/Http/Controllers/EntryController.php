@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Clock;
 use App\Entry;
+use App\TimerProject;
 use App\Http\Requests\EntryRequest;
 use App\Http\Resources\EntryResource;
 use Illuminate\Support\Facades\DB;
@@ -67,6 +68,7 @@ class EntryController extends Controller
         $entries->new_entry = $today;
 
         $entries->save();
+        
 
         $project = TimerProject::find($timer_project_id);
 
