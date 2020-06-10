@@ -263,7 +263,7 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TransactionRequest $request, $id)
+    public function update(TransactionUpdateRequest $request, $id)
     {
 
 

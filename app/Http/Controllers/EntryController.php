@@ -68,6 +68,11 @@ class EntryController extends Controller
 
         $entries->save();
 
+        $project = TimerProject::find($timer_project_id);
+
+        $project->touch();
+
+
         // $entry = DB::table('entries')->insert(
         //     [
         //         'user_id' => $user_id,

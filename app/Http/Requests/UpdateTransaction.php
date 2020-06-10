@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TransactionUpdateRequest extends FormRequest
+class UpdateTransaction extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class TransactionUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,12 +24,7 @@ class TransactionUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => "required|min:2|max:30|string",
-            'type' => 'required|min:3|string',
-            'amount' =>'required|min:1',
-            'category' => 'required|string',
-            'date' => 'required',
-
+            //
         ];
     }
 }
