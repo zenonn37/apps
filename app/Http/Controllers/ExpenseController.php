@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\resources\ExpenseResource;
 
 class ExpenseController extends Controller
 {
@@ -13,6 +14,12 @@ class ExpenseController extends Controller
      */
     public function index()
     {
+        $user = auth()->user()->id;
+
+        $expense = Expense::where('user_id',$user)->get();
+
+        return ExpenseResource::collection($expense);
+
         //
     }
 
@@ -24,22 +31,28 @@ class ExpenseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ExpenseRequest $request)
     {
-        //
+        $expense = new Expense();
+        
+        $userId = auth()->user()->id;
+        $expense->name = $request->name;
+        $expense->user_id = $userId;
+        $expense->type = $request->type;
+        $expense->amount = $request->amount;
+        $expense->due = $request->due;
+        $expense->paid = $request->paid;
+        $expense->repeated = $request->repeated;
+        $expense->category = $request->category;
+
+        $expense->save();
+
+        return new ExpenseResource($expense);
+
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
+   
     
 
     /**
@@ -62,6 +75,8 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Expense::destroy($id);
+
+        return response()->json('Record Destroyed');
     }
 }

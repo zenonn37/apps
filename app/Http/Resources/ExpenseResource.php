@@ -14,6 +14,14 @@ class ExpenseResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return[
+          'name' => $this->name,
+          'type' => $this->type,
+          'amount' => $this->amount,
+          'due' => $this->due,
+          'paid' => $this->paid,
+          'repeated' => $this->repeated,
+          'id' => $this->id,
+        ];
     }
 }
