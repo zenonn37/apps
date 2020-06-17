@@ -1,12 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\resources\ExpenseResource;
+use App\Http\Requests\ExpenseRequest;
+use App\Expense;
 
 class ExpenseController extends Controller
 {
+
+    
+
+
     /**
      * Display a listing of the resource.
      *
@@ -21,6 +27,25 @@ class ExpenseController extends Controller
         return ExpenseResource::collection($expense);
 
         //
+    }
+
+    public function expense_total(){
+        $user = auth()->user()->id;
+         
+        $expense = Expense::where('user_id',$user)->get();        
+
+       
+        $total = ExpenseResource::collection($expense)->sum('amount');
+
+        $output =[
+            'total' => $total
+        ];
+
+        return response()->json($output);
+
+        
+
+
     }
 
    
@@ -38,11 +63,11 @@ class ExpenseController extends Controller
         $userId = auth()->user()->id;
         $expense->name = $request->name;
         $expense->user_id = $userId;
-        $expense->type = $request->type;
+       
         $expense->amount = $request->amount;
         $expense->due = $request->due;
-        $expense->paid = $request->paid;
-        $expense->repeated = $request->repeated;
+       
+       
         $expense->category = $request->category;
 
         $expense->save();
@@ -74,7 +99,7 @@ class ExpenseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
+{
         Expense::destroy($id);
 
         return response()->json('Record Destroyed');

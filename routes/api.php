@@ -104,10 +104,12 @@ Route::post('/transactions', 'TransactionsController@store')->middleware('auth:a
 Route::patch('/transactions/{transactions}', 'TransactionsController@update')->middleware('auth:api');
 Route::delete('/transactions/{id}', 'TransactionsController@destroy')->middleware('auth:api');
 //expeneses
-Route::get('/expenese', 'ExpenseController@index')->middleware('auth:api');
-Route::post('/expenese', 'ExpenseController@store')->middleware('auth:api');
-Route::patch('/expenese/{expenese}', 'ExpenseController@update')->middleware('auth:api');
-Route::delete('/expenese/{expenese}', 'ExpenseController@destroy')->middleware('auth:api');
+Route::get('/expense', 'ExpenseController@index')->middleware('auth:api');
+Route::get('/expense_total', 'ExpenseController@expense_total')->middleware('auth:api');
+Route::post('/expense', 'ExpenseController@store')->middleware('auth:api');
+Route::patch('/expense/{expense}', 'ExpenseController@update')->middleware('auth:api');
+Route::delete('/expense/{expense}', 'ExpenseController@destroy')->middleware('auth:api');
+
 
 
 
