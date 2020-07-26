@@ -95,6 +95,7 @@ Route::delete('/accounts/{accounts}', 'AccountsController@destroy')->middleware(
 //transactions
 Route::get('/month', 'TransactionsController@transMonth')->middleware('auth:api');
 Route::get('/worth', 'TransactionsController@netWorth')->middleware('auth:api');
+Route::get('/account_worth/{id}', 'TransactionsController@acct')->middleware('auth:api');
 Route::post('/total/{id}', 'TransactionsController@total');
 Route::post('/day/{id}', 'TransactionsController@singleDay');
 Route::post('/range/{id}', 'TransactionsController@dateRange')->middleware('auth:api');
@@ -103,6 +104,8 @@ Route::get('/transactions/{transactions}', 'TransactionsController@show')->middl
 Route::post('/transactions', 'TransactionsController@store')->middleware('auth:api');
 Route::patch('/transactions/{transactions}', 'TransactionsController@update')->middleware('auth:api');
 Route::delete('/transactions/{id}', 'TransactionsController@destroy')->middleware('auth:api');
+Route::get('/category/{term}/{id}', 'TransactionsController@category')->middleware('auth:api');
+Route::get('/search/{term}/{id}', 'TransactionsController@search')->middleware('auth:api');
 //expeneses
 Route::get('/expense', 'ExpenseController@index')->middleware('auth:api');
 Route::get('/expense_total', 'ExpenseController@expense_total')->middleware('auth:api');
@@ -110,7 +113,8 @@ Route::post('/expense', 'ExpenseController@store')->middleware('auth:api');
 Route::patch('/expense/{expense}', 'ExpenseController@update')->middleware('auth:api');
 Route::delete('/expense/{expense}', 'ExpenseController@destroy')->middleware('auth:api');
 
-
+//expense filters
+Route::get('/expense-category/{category}', 'ExpenseController@category')->middleware('auth:api');
 
 
 //timer projects

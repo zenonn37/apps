@@ -22,11 +22,24 @@ class ExpenseController extends Controller
     {
         $user = auth()->user()->id;
 
-        $expense = Expense::where('user_id',$user)->get();
+        $expense = Expense::where('user_id',$user)
+        ->orderBy('updated_at','DESC')
+        ->get();
 
         return ExpenseResource::collection($expense);
 
         //
+    }
+
+    public function category($category){
+        $user = auth()->user()->id;
+        $expense = Expense::where('user_id',$user)
+        ->where('category',$category)
+        ->orderBy('updated_at','DESC')
+        ->get();
+
+        return ExpenseResource::collection($expense);
+
     }
 
     public function expense_total(){
@@ -65,7 +78,7 @@ class ExpenseController extends Controller
         $expense->user_id = $userId;
        
         $expense->amount = $request->amount;
-        $expense->due = $request->due;
+        $expense->date = $request->date;
        
        
         $expense->category = $request->category;
@@ -89,7 +102,10 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $expense = Expense::find($id);
+
+        $expense->update($request->only(['name','amount','date','paid','category']));
+        $expense->save();
     }
 
     /**

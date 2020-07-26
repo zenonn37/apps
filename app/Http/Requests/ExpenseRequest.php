@@ -26,8 +26,7 @@ class ExpenseRequest extends FormRequest
         return [
             'name' => 'required|string|min:2|max:40',
             'amount'=>'required|min:1',
-            'due'=>'required',
-            
+            'date'=>'required',            
             'category'=>'required|string|min:3'
         ];
     }

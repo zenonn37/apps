@@ -40,6 +40,49 @@ class TransactionsController extends Controller
         //return response($trans);
     }
 
+
+    public function acct($id){
+
+        //get current date
+        $current = Carbon::today();
+        //subtract 30 days from current date
+        $lastThirty =  Carbon::today()->subDays(30);
+        //get data between today and thirty days ago
+
+        $worth = Transaction::whereBetween('date',array($lastThirty->toDateString(), $current->toDateString()))
+          ->where('acct_id',$id)
+          ->get();
+          $deposits = Transaction::whereBetween('date',array($lastThirty->toDateString(), $current->toDateString()))
+          ->where('acct_id',$id)
+          ->where('type','Deposit')
+          ->get();
+          $debits = Transaction::whereBetween('date',array($lastThirty->toDateString(), $current->toDateString()))
+          ->where('acct_id',$id)
+          ->where('type','Debit')
+          ->get();
+
+          //get daily spending avg
+          $spent = TransactionResource::collection($debits)->sum('amount');
+
+           $avg =  $spent / 30; 
+
+          $balance =  TransactionResource::collection($deposits)->sum('amount')  -  TransactionResource::collection($debits)->sum('amount');
+
+          $data = [
+             'transactions' => TransactionResource::collection($worth)->count('id'),
+             'debits'  => TransactionResource::collection($debits)->count('id'),
+             'credits'  => TransactionResource::collection($deposits)->count('id'),
+             'spent'  =>  $spent,
+             'deposits' =>  TransactionResource::collection($deposits)->sum('amount'),
+             'balance'  =>  $balance,
+             'daily' => $avg,
+          ];
+
+          return response()->json($data);
+
+  }
+
+
     
 
     //add all transaction for per day
@@ -55,6 +98,33 @@ class TransactionsController extends Controller
             ));
 
         return response()->json($trans);
+    }
+
+    public function search($term,$id){
+
+      
+        $trans = Transaction::where('acct_id',$id)
+        //refactor before final go. escape like term
+        ->where('name','like',"%$term%" )
+        ->orderBy('updated_at', 'DESC')
+        ->get();
+        return TransactionResource::collection($trans);
+       // return response()->json($term);
+    }
+
+
+    public function category($term,$id){
+       
+
+        $trans = Transaction::where('acct_id',$id)
+        ->where('category',$term)
+
+        ->orderBy('date','DESC')
+        ->get();
+
+
+
+        return TransactionResource::collection($trans);
     }
 
 
@@ -109,6 +179,7 @@ class TransactionsController extends Controller
         return response()->json($trans);
     }
 
+ 
     public function netWorth()
     {
 

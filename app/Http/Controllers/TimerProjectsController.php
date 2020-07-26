@@ -33,6 +33,7 @@ class TimerProjectsController extends Controller
 
         $term = $request->term;
         $projects = TimerProject::where('user_id', auth()->user()->id)
+        //refactor before final go. escape like term
         ->where('name','like',"%$term%" )
         ->orderBy('updated_at', 'DESC')
         ->get();
