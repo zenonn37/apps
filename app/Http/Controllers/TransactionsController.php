@@ -25,7 +25,7 @@ class TransactionsController extends Controller
         //get current date
         $current = Carbon::today();
         //subtract 30 days from current date
-        $lastThirty =  Carbon::today()->subDays(30);
+        $lastThirty =  Carbon::today()->subDays(28);
         //get data between today and thirty days ago
 
 
@@ -33,11 +33,127 @@ class TransactionsController extends Controller
         $trans = Transaction::whereBetween('date', array($lastThirty->toDateString(), $current->toDateString()))
             ->where('acct_id', $id)
             ->orderBy('date', 'desc')
-            ->paginate(18);
+            ->paginate(100);
 
         return TransactionResource::collection($trans);
 
         //return response($trans);
+    }
+
+    public function monthly($id){
+
+    //setup arrays to hold days
+
+    
+
+     //get current date
+
+
+     $today = Carbon::today();
+ 
+
+      //week 4
+     $lastSeven = Carbon::today()->subDays(7);
+     $lastFourteen = Carbon::today()->subDays(14);
+     //week 2
+     $lastTwentyOne = Carbon::today()->subDays(21);
+     $lastTwentyTwo = Carbon::today()->subDays(22);
+
+
+     //week 1
+     $lastThirty =  Carbon::today()->subDays(28);
+
+     $one = Transaction::whereBetween('date',array($lastThirty->toDateString(), $lastTwentyOne->toDateString()))
+     ->where('acct_id',$id)
+     ->where('type', '!=' ,'Deposit')
+     ->orderBy('date','ASC')
+     ->get();
+     ///week 3
+
+     $two = Transaction::whereBetween('date',array($lastTwentyOne->addDays(1)->toDateString(), $lastFourteen->toDateString()))
+     ->where('acct_id',$id)
+     ->where('type', '!=' ,'Deposit')
+     ->orderBy('date','ASC')
+     ->get();
+
+     $three = Transaction::whereBetween('date',array($lastFourteen->addDays(1)->toDateString(), $lastSeven->toDateString()))
+     ->where('acct_id',$id)
+     ->where('type', '!=' ,'Deposit')
+     ->orderBy('date','ASC')
+     ->get();
+
+     $four = Transaction::whereBetween('date',array($lastSeven->toDateString(), $today->addDays(1)->toDateString()))
+     ->where('acct_id',$id)
+     ->where('type', '!=' ,'Deposit')
+     ->orderBy('date','ASC')
+     ->get();
+     
+
+
+    $week1 = [
+        'weekOne' => TransactionResource::collection($one)->sum('amount'),
+        'weekTwo' => TransactionResource::collection($two)->sum('amount'),
+        'weekThree' => TransactionResource::collection($three)->sum('amount'),
+        'weekFour' => TransactionResource::collection($four)->sum('amount'),
+    ];
+
+    // $m = attributesToArray($week1);
+
+    $data = [
+
+      
+
+        // 'range1'=> $today->toDateString(),
+        // 'range2'=> $lastSeven->toDateString(),
+        // 'range3'=> $lastFourteen->toDateString(),
+        //  'range4'=>$lastTwentyOne->toDateString(),
+        // 'range6'=> $lastThirty->toDateString(),
+        'month' => [
+
+           
+            
+            'weekOne' => TransactionResource::collection($one)->sum('amount'),
+            'weekTwo' => TransactionResource::collection($two)->sum('amount'),
+            'weekThree' => TransactionResource::collection($three)->sum('amount'),
+            'weekFour' => TransactionResource::collection($four)->sum('amount'),
+            
+            
+
+        ],
+        'trans' => [
+            'weekOneTrans' => TransactionResource::collection($one)->count('id'),
+            'weekTwoTrans' => TransactionResource::collection($two)->count('id'),
+            'weekThreeTrans' => TransactionResource::collection($three)->count('id'),
+            'weekFourTrans' => TransactionResource::collection($four)->count('id'),
+        ],
+
+        // 'weekOneTotal' => TransactionResource::collection($one)->sum('amount'),
+        // 'weekOneTrans' => TransactionResource::collection($one)->count('id'),
+        // 'weekTwoTotal' => TransactionResource::collection($two)->sum('amount'),
+        // 'weekTwoTrans' => TransactionResource::collection($two)->count('id'),
+        // 'weekThreeTotal' => TransactionResource::collection($three)->sum('amount'),
+        // 'weekThreeTrans' => TransactionResource::collection($three)->count('id'),
+        // 'weekFourTotal' => TransactionResource::collection($four)->sum('amount'),
+        // 'weekFourTrans' => TransactionResource::collection($four)->count('id'),
+
+
+
+
+
+
+        // 'week1' => TransactionResource::collection($one),
+        // 'week2' => TransactionResource::collection($two),
+        // 'week3' => TransactionResource::collection($three),
+        // 'week4' => TransactionResource::collection($four),
+
+    ];
+
+    $test = json_decode(json_encode($week1),true);
+
+
+    return  response($data);
+
+
     }
 
 
@@ -58,7 +174,7 @@ class TransactionsController extends Controller
           ->get();
           $debits = Transaction::whereBetween('date',array($lastThirty->toDateString(), $current->toDateString()))
           ->where('acct_id',$id)
-          ->where('type','Debit')
+          ->where('type', '!=' ,'Deposit')
           ->get();
 
           //get daily spending avg

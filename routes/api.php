@@ -106,6 +106,7 @@ Route::patch('/transactions/{transactions}', 'TransactionsController@update')->m
 Route::delete('/transactions/{id}', 'TransactionsController@destroy')->middleware('auth:api');
 Route::get('/category/{term}/{id}', 'TransactionsController@category')->middleware('auth:api');
 Route::get('/search/{term}/{id}', 'TransactionsController@search')->middleware('auth:api');
+Route::get('/monthly/{id}','TransactionsController@monthly')->middleware('auth:api');
 //expeneses
 Route::get('/expense', 'ExpenseController@index')->middleware('auth:api');
 Route::get('/expense_total', 'ExpenseController@expense_total')->middleware('auth:api');
