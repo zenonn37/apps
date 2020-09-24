@@ -180,10 +180,25 @@ class TransactionsController extends Controller
           //get daily spending avg
           $spent = TransactionResource::collection($debits)->sum('amount');
 
-           $avg =  $spent / 30; 
+           $avg =  $spent / 28; 
 
           $balance =  TransactionResource::collection($deposits)->sum('amount')  -  TransactionResource::collection($debits)->sum('amount');
 
+
+          $cat = TransactionResource::collection($debits)->duplicatesStrict('category');
+
+          $cate = ['food','housing','transportation'];
+          
+          $test = array();
+
+          foreach ($cate as $value) {
+             $temp = Transaction::where('category',$value)
+             ->where('acct_id',$id)
+             ->where('type', '!=' ,'Deposit')
+             ->get();
+          }
+          
+          
           $data = [
              'transactions' => TransactionResource::collection($worth)->count('id'),
              'debits'  => TransactionResource::collection($debits)->count('id'),
@@ -192,9 +207,24 @@ class TransactionsController extends Controller
              'deposits' =>  TransactionResource::collection($deposits)->sum('amount'),
              'balance'  =>  $balance,
              'daily' => $avg,
+             'debit' => $debits,
+             
           ];
 
           return response()->json($data);
+
+  }
+
+
+
+  public function categories(){
+
+    $debits = Transaction::whereBetween('date',array($lastThirty->toDateString(), $current->toDateString()))
+    ->where('acct_id',$id)
+    ->where('type', '!=' ,'Deposit')
+    ->get();
+
+    $debits->duplicates('category');
 
   }
 

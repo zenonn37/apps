@@ -120,14 +120,14 @@ class ClockController extends Controller
         return response()->json($clock);
     }
 
-    public function filterClockChart(ClockChartRequest $request)
+    public function filterClockChart(Request $request)
     {
         $user_id = auth()->user()->id;
-        $clock = Clock::whereBetween('date', array($request->start, $request->end))
+        $clock = Entry::whereBetween('new_entry', array($request->start, $request->end))
             ->where('user_id', $user_id)
-            ->groupBy('date')
+            ->groupBy('new_entry')
             ->get(array(
-                DB::raw('date'),
+                DB::raw('new_entry'),
                 DB::raw('SUM(seconds) as seconds'),
 
             ));
