@@ -19,7 +19,14 @@ class AccountsController extends Controller
     {
         $acct = Account::where('user_id', auth()->user()->id)->get();
 
-        return AccountResource::collection($acct);
+        $data = [
+            'data' =>[
+            'accounts' => AccountResource::collection($acct),
+            'total' => AccountResource::collection($acct)->sum('balance')
+            ]
+        ];
+        
+        return response()->json($data);
     }
 
 
