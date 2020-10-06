@@ -299,7 +299,7 @@ class TransactionsController extends Controller
     public function dateRange(Request $request, $id)
     {
         $trans = Transaction::whereBetween('date', array($request->date, $request->date2))
-            ->where('acct_id', $id)->orderBy('date', 'desc')->paginate(18);
+            ->where('acct_id', $id)->orderBy('date', 'desc')->get();
         return TransactionResource::collection($trans);
     }
 
