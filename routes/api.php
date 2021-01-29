@@ -70,13 +70,7 @@ Route::patch('/tasks/{task}', 'TaskController@update')->middleware('auth:api');
 Route::delete('/tasks/{task}', 'TaskController@destroy')->middleware('auth:api');
 
 
-//weatherapi
-// Route::get('/city', 'SaveCityController@index');
-// Route::get('/city/{city}', 'SaveCityController@search');
-// Route::get('/city/{city}', 'SaveCityController@show');
-// Route::post('/city', 'SaveCityController@store');
-// Route::patch('/city/{city}', 'SaveCityController@update');
-// Route::delete('/city/{city}', 'SaveCityController@destroy');
+
 
 Route::post('/city', 'ApiWeatherController@getCity');
 Route::post('/dark', 'ApiWeatherController@dark');

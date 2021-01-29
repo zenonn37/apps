@@ -21,25 +21,17 @@ class EntryController extends Controller
 
     public function entryAll(){
 
-        //Select Sum(seconds) as seconds
-        //FROM entries
-        //WHERE user_id = $user_id
-        //GROUP BY user_id
+  
         
         $user_id = auth()->user()->id;
-
          
-        // $entries = DB::select('select new_entry, SUM(seconds) as seconds
-        // from entries
-        //  where user_id = ?
-        //  group by new_entry
-        // '[$user_id]);
-      
-        // return response()->json($entries);
+        
 
-
+        $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
 
         $entry = Entry::where('user_id',$user_id)
+        ->whereBetween('new_entry',array($pastSixDays, Carbon::today()->toDateTimeString()))
+         
         ->groupBy('new_entry')
         ->get(array(
          DB::raw('new_entry'),
