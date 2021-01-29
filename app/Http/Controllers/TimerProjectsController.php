@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Clock;
+use App\TimerTask;
+use Carbon\Carbon;
+use App\TimerProject;
+use Illuminate\Http\Request;
+use App\Http\Requests\TimerProjectUpdate;
 use App\Http\Requests\TimerProjectRequest;
 use App\Http\Resources\TimerProjectResource;
-use App\TimerProject;
-use App\TimerTask;
-use App\Clock;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class TimerProjectsController extends Controller
 {
@@ -23,7 +24,7 @@ class TimerProjectsController extends Controller
       
         $projects = TimerProject::where('user_id', auth()->user()->id)
             ->where('completed',$bool)
-            ->orderBy('updated_at', 'DESC')
+            ->orderBy('updated_at', 'ASC')
             ->get();
 
         return TimerProjectResource::collection($projects);
@@ -73,7 +74,7 @@ class TimerProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TimerProjectRequest $request, $id)
+    public function update(TimerProjectUpdate $request, $id)
     {
         $project  = TimerProject::find($id);
 
