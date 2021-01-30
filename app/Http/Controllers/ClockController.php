@@ -22,8 +22,22 @@ class ClockController extends Controller
      */
     public function index($id)
     {
-        //user id
-        $user_id = auth()->user()->id;
+       
+       //handles project entry data for time reports
+
+
+        // $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
+      
+
+        // $entry = Entry::whereBetween('new_entry',array($pastSixDays, Carbon::today()->toDateTimeString()))
+        // ->where('timer_project_id', $id)
+        //   ->groupBy('new_entry')
+        //   ->get(array(
+        //       DB::raw('new_entry' ),
+        //       DB::raw('SUM(seconds) as seconds')
+
+        //   ));
+        //   return response()->json( $entry);
 
         //clock collection
         $pastSixDays = Carbon::today()->subDays(6);
@@ -72,15 +86,7 @@ class ClockController extends Controller
 
         $user_id = auth()->user()->id;
         $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
-        // $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
-        //     ->where('user_id', $user_id)
-        //     ->groupBy('date')
-        //     ->get(array(
-        //         DB::raw('date'),
-        //         DB::raw('SUM(seconds) as seconds'),
-
-        //     ));
-
+      
 
             $entry = Entry::whereBetween('new_entry',array($pastSixDays, Carbon::today()->toDateTimeString()))
               ->where('user_id',$user_id)
@@ -104,20 +110,30 @@ class ClockController extends Controller
     {
 
 
+        //handles single project chart data
 
         $pastSixDays = Carbon::today()->subWeeks(1)->toDateTimeString();
-        $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
-            ->where('timer_project_id', $id)
-             ->groupBy('date')
+        // $clock = Clock::whereBetween('date', array($pastSixDays, Carbon::today()->toDateTimeString()))
+        //     ->where('timer_project_id', $id)
+        //      ->groupBy('date')
+        //     ->get(array(
+        //         DB::raw('date'),
+        //         DB::raw('SUM(seconds) as seconds'),
+
+        //     ));
+
+            $entry = Entry::whereBetween('new_entry',array($pastSixDays, Carbon::today()->toDateTimeString()))
+            ->where('timer_project_id',$id)
+            ->groupBy('new_entry')
             ->get(array(
-                DB::raw('date'),
-                DB::raw('SUM(seconds) as seconds'),
+                DB::raw('new_entry' ),
+                DB::raw('SUM(seconds) as seconds')
 
             ));
 
 
 
-        return response()->json($clock);
+        return response()->json($entry);
     }
 
     public function filterClockChart(Request $request)
