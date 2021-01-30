@@ -126,7 +126,7 @@ class ClockController extends Controller
             ->where('timer_project_id',$id)
             ->groupBy('new_entry')
             ->get(array(
-                DB::raw('new_entry' ),
+                DB::raw('new_entry'),
                 DB::raw('SUM(seconds) as seconds')
 
             ));
@@ -153,6 +153,22 @@ class ClockController extends Controller
 
     public function filterClockChartProject(ClockChartRequest $request, $id)
     {
+        
+        $start = Carbon::parse($request->start)->toDateString();
+        $end = Carbon::parse($request->end)->toDateString();
+
+        $entry = Entry::whereBetween('new_entry',array($start, $end))
+        ->where('timer_project_id',$id)
+        ->groupBy('new_entry')
+        ->get(array(
+            DB::raw('new_entry'),
+            DB::raw('SUM(seconds) as seconds')
+
+        ));
+
+
+
+    return response()->json($entry);
 
         $clock = Clock::whereBetween('date', array($request->start, $request->end))
             ->where('timer_project_id', $id)

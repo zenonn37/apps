@@ -24,7 +24,7 @@ class TimerProjectsController extends Controller
       
         $projects = TimerProject::where('user_id', auth()->user()->id)
             ->where('completed',$bool)
-            ->orderBy('updated_at', 'ASC')
+            ->orderBy('updated_at', 'DESC')
             ->get();
 
         return TimerProjectResource::collection($projects);
